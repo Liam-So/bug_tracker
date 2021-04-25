@@ -12,7 +12,7 @@ const Register = () => {
 
     const history = useHistory();
 
-    async function signUpWithEmailAndPassword() {
+    const signUpWithEmailAndPassword = async() => {
         if (password !== confirmPassword) {
             setError("Please make sure your passwords match.");
             return;
