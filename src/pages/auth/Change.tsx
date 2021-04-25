@@ -5,14 +5,13 @@ import { auth } from '../../config/firebase'
 
 const Change = () => {
     const [changing, setChanging] = useState<boolean>(false);
-    const [old, setOld] = useState<string>('');
     const [password, setPassword] = useState<string>('');
     const [confirm, setConfirm] = useState<string>('');
     const [error, setError] = useState<string>('');
 
     const history = useHistory();
 
-    async function passwordChangeRequest() {
+    const passwordChangeRequest = async() => {
         if (password !== confirm)
         {
             setError('Please make sure that your passwords match.');
@@ -35,7 +34,7 @@ const Change = () => {
         })
     }
 
-    // What is this for? 
+    // verify social media provider
     if (auth.currentUser?.providerData[0]?.providerId !== 'password')
         return <Redirect to="/"/>
 
@@ -59,22 +58,6 @@ const Change = () => {
                 </h1>
 
                 <form className="mt-6">
-                    <div className="pb-2">
-                    <label className="block text-gray-700">Old Password</label>
-                    <input
-                        type="password"
-                        name="oldPassword"
-                        id="oldPassword"
-                        placeholder="Enter New Password"
-                        className="w-full px-4 py-3 rounded-lg bg-gray-200 mt-2 border focus:border-blue-500 focus:bg-white focus:outline-none"
-                        autoFocus
-                        required
-                        autoComplete="new-password"
-                        onChange={event => setOld(event.target.value)}
-                        value={old}
-                    />
-                    </div>
-
                     <div>
                     <label className="block text-gray-700">New Password</label>
                     <input
@@ -113,21 +96,21 @@ const Change = () => {
                         type="button"
                         onClick={() => passwordChangeRequest()}
                     >
-                        Register Account
+                        Change Password
                     </button>
                 </form>
 
                 <hr className="my-6 border-gray-300 w-full" />
 
 
-                <p className="mt-8 flex items-center justify-center flex-col">
+                <h1 className="mt-8 flex items-center justify-center flex-col">
                     Need an account?{" "}
                     <Link to="/register">
                     <p className="text-blue-500 hover:text-blue-700 font-semibold">
                         Create an account
                     </p>
                     </Link>
-                </p>
+                </h1>
                 <ErrorText error={error} />
                 </div>
             </div>

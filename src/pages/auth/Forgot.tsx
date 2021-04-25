@@ -1,29 +1,31 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
+import { auth } from '../../config/firebase'
 import ErrorText from '../../components/ErrorText'
 import { Link } from 'react-router-dom'
-import { auth } from '../../config/firebase';
 
 const Forgot = () => {
-    const [sending, setSending] = useState(false);
-    const [sent, setSent] = useState(false);
-    const [email, setEmail] = useState('');
-    const [error, setError] = useState('');
+    const [sending, setSending] = useState<boolean>(false);
+    const [sent, setSent] = useState<boolean>(false);
+    const [email, setEmail] = useState<string>('');
+    const [error, setError] = useState<string>('');
 
-    async function resetPasswordRequest() {
-        if (error !== "") setError("");
+    
+    const resetPasswordRequest = async() => {
+        if (error !== '') setError('');
 
         setSending(true);
 
         await auth.sendPasswordResetEmail(email)
         .then(() => {
-            console.log("Password reset has been sent!");
+            console.log('Email sent.');
             setSent(true);
             setSending(false);
         })
         .catch(error => {
-            console.log(error.message);
+            console.log(error);
             setError(error.message);
-        })
+            setSending(false);
+        });
     }
 
     return (

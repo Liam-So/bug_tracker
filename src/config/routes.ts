@@ -3,6 +3,7 @@ import Change from "../pages/auth/Change";
 import Forgot from "../pages/auth/Forgot";
 import Login from "../pages/auth/Login";
 import Register from "../pages/auth/Register";
+import ResetPasswordPage from "../pages/auth/Reset";
 import Home from "../pages/Home";
 
 const routes: Route[] = [
@@ -40,6 +41,13 @@ const routes: Route[] = [
         component: Change,
         name: 'Change Page',
         protected: true
+    },
+    {
+        path: '/reset',
+        exact: true,
+        component: ResetPasswordPage,
+        name: 'Reset Password Page',
+        protected: false
     },
 ];
 
