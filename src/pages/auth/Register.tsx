@@ -34,9 +34,7 @@ const Register = () => {
                 name: `${firstName} ${lastName}`,
                 email: email,
                 userDesc: 'This is a test for a developer',
-                title: 'Full Stack Developer',
-                projects: [],
-                tickets: []
+                title: 'Full Stack Developer'
             })
 
             setRegistering(false);
