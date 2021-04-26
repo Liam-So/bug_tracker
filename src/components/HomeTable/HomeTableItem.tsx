@@ -1,24 +1,23 @@
-import HomeItem from "../../interfaces/HomeItem"
+import Project from "../../interfaces/Project"
 
-const HomeTableItem = ({ item }: { item:HomeItem }) => {
+const HomeTableItem = ({ item }: { item:Project }) => {
+
+    const getStatus = () => {
+        if (item.status === 'in_progress') {
+            return <span className="bg-purple-200 text-purple-600 py-1 px-3 rounded-full text-xs">Active</span>
+        } else if (item.status === 'completed') {
+            return <span className="bg-green-200 text-green-600 py-1 px-3 rounded-full text-xs">Completed</span>
+        } else if (item.status === 'pending') {
+            return <span className="bg-red-200 text-red-600 py-1 px-3 rounded-full text-xs">Pending</span>
+        }
+    }
+
     return (
-        <tr className="relative transform scale-100 text-xs py-1 border-b-2 border-blue-100 cursor-default">
-            <td className="pl-5 pr-3 whitespace-no-wrap">
-            <div className="text-gray-400">{item.date}</div>
-            <div>{item.time}</div>
-            </td>
-
-            <td className="px-2 py-2 whitespace-no-wrap">
-            <div className="leading-5 text-gray-500 font-medium">
-                {item.name}
-            </div>
-            <div className="leading-5 text-gray-900">
-                {item.description}
-                <a className="text-blue-500 hover:underline" href="#">
-                {item.link}
-                </a>
-            </div>
-            <div className="leading-5 text-gray-800">Hello message</div>
+        <tr className="hover:bg-gray-100 border-b border-gray-200 py-10">
+            <td className="px-4 py-4">{item.description}</td>
+            <td className="px-4 py-4">{item.num_bugs}</td>
+            <td className="px-4 py-4">
+                {getStatus()}
             </td>
         </tr>
     )
