@@ -4,6 +4,7 @@ import ErrorText from '../../components/ErrorText'
 import { Link } from 'react-router-dom'
 
 const Forgot = () => {
+    // eslint-disable-next-line
     const [sending, setSending] = useState<boolean>(false);
     const [sent, setSent] = useState<boolean>(false);
     const [email, setEmail] = useState<string>('');

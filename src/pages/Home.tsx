@@ -36,6 +36,7 @@ const Home = () => {
     
     useEffect(() => {
         getUserProjects();
+        // eslint-disable-next-line
     }, [])
 
 
@@ -60,6 +61,7 @@ const Home = () => {
 
     useEffect(() => {
         getUserTickets();
+        // eslint-disable-next-line
     }, [])
 
 

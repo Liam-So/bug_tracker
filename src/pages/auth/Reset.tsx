@@ -7,6 +7,7 @@ import queryString from 'querystring';
 const ResetPasswordPage = (props: RouteComponentProps) => {
     const [verifying, setVerifying] = useState(true);
     const [verified, setVerified] = useState(false);
+    // eslint-disable-next-line
     const [changing, setChanging] = useState(false);
     const [password, setPassword] = useState('');
     const [confirm, setConfirm] = useState('');
