@@ -16,9 +16,9 @@ const HomeTable = ({ projects } : { projects: Project[] | undefined })  => {
           </tr>
         </thead>
         <tbody className="text-sm font-normal text-gray-700">
-                {projects ? projects.map(e => {
+                {projects ? projects.map((e, index) => {
                     return (
-                        <HomeTableItem item={e} />
+                        <HomeTableItem key={index} item={e} />
                     )
                 }) : (
                     <></>
