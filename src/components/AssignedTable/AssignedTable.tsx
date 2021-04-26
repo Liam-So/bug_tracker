@@ -1,7 +1,8 @@
 import React from "react";
+import Ticket from "../../interfaces/Ticket";
 import AssignedTableItem from "./AssignedTableItem";
 
-const AssignedTable = () => {
+const AssignedTable = ({ tickets }: { tickets: Ticket[] | undefined }) => {
   return (
         <div className="flex justify-center">
             <div className="flex flex-col justify-center w-9/12">
@@ -12,8 +13,13 @@ const AssignedTable = () => {
                 </div>
                 <div className="bg-white shadow overflow-hidden sm:rounded-md">
                 <ul className="divide-y divide-gray-200">
-                    <AssignedTableItem/>
-                    <AssignedTableItem/>
+
+                    {tickets ? tickets.map((e, index) => {
+                        return (
+                            <AssignedTableItem item={e} key={index}/>
+                        )
+                    }): (<></>)}
+
                 </ul>
                 <button
                     type="button"

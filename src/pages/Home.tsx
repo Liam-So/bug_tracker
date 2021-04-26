@@ -67,7 +67,7 @@ const Home = () => {
         <div>
             <Navbar/>
             <HomeTable projects={userProjects} />
-            <AssignedTable />
+            <AssignedTable tickets={userTickets} />
         </div>
     )
 }
