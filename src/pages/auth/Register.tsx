@@ -1,9 +1,11 @@
 import { useState } from 'react'
 import { Link, useHistory } from 'react-router-dom'
 import ErrorText from '../../components/ErrorText'
-import { auth } from '../../config/firebase';
+import Firebase, { auth } from '../../config/firebase';
 
 const Register = () => {
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
     const [registering, setRegistering] = useState(false);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -11,6 +13,8 @@ const Register = () => {
     const [error, setError] = useState('');
 
     const history = useHistory();
+
+    const ref = Firebase.firestore().collection('users');
 
     const signUpWithEmailAndPassword = async() => {
         if (password !== confirmPassword) {
@@ -23,7 +27,16 @@ const Register = () => {
         setRegistering(true);
 
         await auth.createUserWithEmailAndPassword(email, password)
-        .then(() => {
+        .then(cred => {
+            console.log(cred.user?.uid)
+            /* { Add the user in the 'users' collection } */
+            ref.doc(cred.user?.uid).set({
+                name: `${firstName} ${lastName}`,
+                email: email,
+                userDesc: 'This is a test for a developer',
+                title: 'Full Stack Developer'
+            })
+
             setRegistering(false);
             history.push('/login');
         })
@@ -62,6 +75,35 @@ const Register = () => {
                 </h1>
 
                 <form className="mt-6">
+                    <div className="flex flex-col md:flex-row pb-4 justify-between">
+                        <div>
+                        <label className="block text-gray-700">First Name</label>
+                        <input
+                            type="text"
+                            name="firstName"
+                            id="firstName"
+                            placeholder="Enter First Name"
+                            className="w-full lg:w-11/12 px-4 py-3 rounded-lg bg-gray-200 mt-2 border focus:border-blue-500 focus:bg-white focus:outline-none flex justify-end"
+                            autoFocus
+                            required
+                            onChange={event => setFirstName(event.target.value)}
+                        />
+                        </div>
+                        <div>
+                        <label className="block text-gray-700">Last Name</label>
+                        <input
+                            type="text"
+                            name="lastName"
+                            id="lastName"
+                            placeholder="Enter Last Name"
+                            className="w-full lg:w-11/12 px-4 py-3 rounded-lg bg-gray-200 mt-2 border focus:border-blue-500 focus:bg-white focus:outline-none"
+                            autoFocus
+                            required
+                            autoComplete="new-password"
+                            onChange={event => setLastName(event.target.value)}
+                        />
+                        </div>
+                    </div>
                     <div>
                     <label className="block text-gray-700">Email Address</label>
                     <input

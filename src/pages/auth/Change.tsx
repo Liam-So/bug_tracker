@@ -4,6 +4,7 @@ import { Link, useHistory, Redirect } from 'react-router-dom'
 import { auth } from '../../config/firebase'
 
 const Change = () => {
+    // eslint-disable-next-line
     const [changing, setChanging] = useState<boolean>(false);
     const [password, setPassword] = useState<string>('');
     const [confirm, setConfirm] = useState<string>('');
