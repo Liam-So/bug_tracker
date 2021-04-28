@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import AssignedTable from '../components/AssignedTable/AssignedTable';
+import CreateItems from '../components/CreateItems';
 import HomeTable from '../components/HomeTable/HomeTable';
-import { Navbar } from '../components/Navbar';
+import { Navbar } from '../components/Navbar/Navbar';
 import Firebase, { auth } from '../config/firebase';
 import Project from '../interfaces/Project';
 import Ticket from '../interfaces/Ticket';
@@ -68,6 +69,12 @@ const Home = () => {
     return (
         <div>
             <Navbar/>
+            <div className="flex justify-center items-center md:pt-2">
+                <div className="w-full md:w-9/12 p-4 flex justify-center md:justify-start">
+                    <CreateItems/>
+                </div>
+            </div> 
+            
             <HomeTable projects={userProjects} />
             <AssignedTable tickets={userTickets} />
         </div>
