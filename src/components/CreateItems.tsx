@@ -7,24 +7,27 @@ const CreateProject = () => {
 
     return (
         <>
-        <button 
-            className="py-2 px-2 bg-indigo-200 rounded-full text-sm text-gray-800 mr-2 font-semibold transition duration-500 ease-in-out hover:bg-indigo-300 transform hover:-translate-y-1 hover:scale-110"
-            onClick={() => {
-                setModal(true);
-                setModalTicket(false);
-            }}
-        >
-            New Project 📜
-        </button>
-        <button 
-                className="border-0 py-2 px-2 bg-green-100 rounded-full text-sm text-gray-800 font-semibold transition duration-500 ease-in-out hover:bg-green-300 transform hover:-translate-y-1 hover:scale-110"
+        <div className="flex justify-center md:justify-start pt-2">
+            <button 
+                className="py-2 px-2 bg-indigo-200 rounded-full text-sm text-gray-800 mr-2 font-semibold transition duration-500 ease-in-out hover:bg-indigo-300 transform hover:-translate-y-1 hover:scale-110"
                 onClick={() => {
-                    setModal(false);
-                    setModalTicket(true)
+                    setModal(true);
+                    setModalTicket(false);
                 }}
             >
-                New Ticket 🎟️
+                New Project 📜
             </button>
+            <button 
+                    className="border-0 py-2 px-2 bg-green-100 rounded-full text-sm text-gray-800 font-semibold transition duration-500 ease-in-out hover:bg-green-300 transform hover:-translate-y-1 hover:scale-110"
+                    onClick={() => {
+                        setModal(false);
+                        setModalTicket(true)
+                    }}
+                >
+                    New Ticket 🎟️
+                </button>
+        </div>
+        
         {modal === true ? (
             <div className="h-full flex flex-col justify-center sm:py-12">
             <div className="relative py-3 sm:max-w-xl sm:mx-auto">

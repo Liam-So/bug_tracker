@@ -70,7 +70,7 @@ const Home = () => {
         <div>
             <Navbar/>
             <div className="flex justify-center items-center md:pt-2">
-                <div className="w-full md:w-9/12 p-4 flex justify-center md:justify-start">
+                <div className="w-full md:w-9/12 p-4">
                     <CreateItems/>
                 </div>
             </div> 
