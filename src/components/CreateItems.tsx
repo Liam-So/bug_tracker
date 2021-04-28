@@ -1,8 +1,53 @@
 import { useState } from 'react'
+import Firebase, { auth } from '../config/firebase';
+import Project from '../interfaces/Project';
 
 const CreateProject = () => {
-    const [modal, setModal] = useState(false);
 
+    
+
+    // Project
+    const [modalProject, setModalProject] = useState(false);
+    const [projectName, setProjectName] = useState('');
+    const [projectDescription, setProjectDescription] = useState('');
+    const [sendingProject, setSendingProject] = useState(false);
+    const [sentProject, setSentProject] = useState(false);
+
+    const projectRef = Firebase.firestore().collection('projects');
+
+    const sendNewProjectToDB = () => {
+
+        setSendingProject(true);
+
+        let projectObject:Project;
+
+        let arrayOfUsers: string[] = [];
+        let userCode:string | undefined = auth.currentUser?.uid;
+
+        if (userCode) {
+            arrayOfUsers.push(userCode);
+        }
+
+        projectObject = {
+            description: projectDescription,
+            id: 'project2',
+            num_bugs: 0,
+            status: 'pending',
+            team: arrayOfUsers,
+            name: projectName
+        }
+
+        projectRef.add(projectObject)
+        .then(() => {
+            setSendingProject(true)
+        })
+        .catch(error => {
+            console.log(error.message);
+        })
+    }
+
+
+    // Ticket
     const [modalTicket, setModalTicket] = useState(false);
 
     return (
@@ -11,7 +56,7 @@ const CreateProject = () => {
             <button 
                 className="py-2 px-2 bg-indigo-200 rounded-full text-sm text-gray-800 mr-2 font-semibold transition duration-500 ease-in-out hover:bg-indigo-300 transform hover:-translate-y-1 hover:scale-110"
                 onClick={() => {
-                    setModal(true);
+                    setModalProject(true);
                     setModalTicket(false);
                 }}
             >
@@ -20,7 +65,7 @@ const CreateProject = () => {
             <button 
                     className="border-0 py-2 px-2 bg-green-100 rounded-full text-sm text-gray-800 font-semibold transition duration-500 ease-in-out hover:bg-green-300 transform hover:-translate-y-1 hover:scale-110"
                     onClick={() => {
-                        setModal(false);
+                        setModalProject(false);
                         setModalTicket(true)
                     }}
                 >
@@ -28,7 +73,7 @@ const CreateProject = () => {
                 </button>
         </div>
         
-        {modal === true ? (
+        {modalProject === true ? (
             <div className="h-full flex flex-col justify-center sm:py-12">
             <div className="relative py-3 sm:max-w-xl sm:mx-auto">
                 <div className="relative px-4 py-10 bg-white mx-8 md:mx-0 shadow rounded-3xl sm:p-10">
@@ -45,20 +90,39 @@ const CreateProject = () => {
                     <div className="divide-y divide-gray-200">
                     <div className="py-8 text-base leading-6 space-y-4 text-gray-700 sm:text-lg sm:leading-7">
                         <div className="flex flex-col">
-                        <label className="leading-loose">Project Name</label>
-                        <input type="text" className="px-4 py-2 border focus:ring-gray-500 focus:border-gray-900 w-full sm:text-sm border-gray-300 rounded-md focus:outline-none text-gray-600" placeholder="Project Name"/>
+                        <label className="leading-loose">
+                            Project Name
+                        </label>
+                        <input 
+                            type="text" 
+                            className="px-4 py-2 border focus:ring-gray-500 focus:border-gray-900 w-full sm:text-sm border-gray-300 rounded-md focus:outline-none text-gray-600" 
+                            placeholder="Project Name"
+                            onChange={e => setProjectName(e.target.value)}
+                        />
                         </div>
     
                         <label className="block">
                         <span className="text-gray-700">Description</span>
-                        <textarea className="form-textarea mt-1 block w-full border focus:ring-gray-500 focus:border-gray-900 w-full border-gray-300 rounded-md focus:outline-none text-gray-600 text-sm p-2" placeholder=" Write a description for the Project."></textarea>
+                        <textarea 
+                            className="form-textarea mt-1 block w-full border focus:ring-gray-500 focus:border-gray-900 w-full border-gray-300 rounded-md focus:outline-none text-gray-600 text-sm p-2" 
+                            placeholder=" Write a description for the Project."
+                            onChange={e => setProjectDescription(e.target.value)}
+                        />
                         </label>
                     </div>
                     <div className="pt-4 flex items-center space-x-4">
-                        <button className="flex justify-center items-center w-full text-gray-900 px-4 py-3 rounded-md focus:outline-none" onClick={() => setModal(false)}>
-                            <svg className="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg> Cancel
+                        <button className="flex justify-center items-center w-full text-gray-900 px-4 py-3 rounded-md focus:outline-none" onClick={() => setModalProject(false)}>
+                            <svg className="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path></svg> Cancel
                         </button>
-                        <button className="bg-blue-500 flex justify-center items-center w-full text-white px-4 py-3 rounded-md focus:outline-none">Create</button>
+                        <button 
+                            className="bg-blue-500 flex justify-center items-center w-full text-white px-4 py-3 rounded-md focus:outline-none"
+                            onClick={() => {
+                                sendNewProjectToDB();
+                                setModalProject(false);
+                            }}
+                        >
+                            Create
+                        </button>
                     </div>
                     </div>
                 </div>
@@ -114,7 +178,7 @@ const CreateProject = () => {
                         </div>
                         <div className="pt-4 flex items-center space-x-4">
                             <button className="flex justify-center items-center w-full text-gray-900 px-4 py-3 rounded-md focus:outline-none" onClick={() => setModalTicket(false)}>
-                                <svg className="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg> Cancel
+                                <svg className="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path></svg> Cancel
                             </button>
                             <button className="bg-blue-500 flex justify-center items-center w-full text-white px-4 py-3 rounded-md focus:outline-none">Create</button>
                         </div>
