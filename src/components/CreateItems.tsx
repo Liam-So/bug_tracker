@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import Firebase, { auth } from '../config/firebase';
 import Project from '../interfaces/Project';
+import Dropdown from './ReuseableComp/Dropdown';
 
 const CreateProject = () => {
 
@@ -101,6 +102,8 @@ const CreateProject = () => {
                         />
                         </div>
     
+                        <Dropdown/>
+
                         <label className="block">
                         <span className="text-gray-700">Description</span>
                         <textarea 
