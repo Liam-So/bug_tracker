@@ -3,5 +3,6 @@ export default interface Ticket {
     id: string;
     title: string;
     type: string;
-    user: string;
+    user: string | undefined;
+    severity: string;
 }

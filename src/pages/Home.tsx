@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import AssignedTable from '../components/AssignedTable/AssignedTable';
-import CreateItems from '../components/CreateItems';
+import CreateItems from '../components/CreateItems/CreateItems';
 import HomeTable from '../components/HomeTable/HomeTable';
 import { Navbar } from '../components/Navbar/Navbar';
 import Firebase, { auth } from '../config/firebase';
@@ -52,7 +52,8 @@ const Home = () => {
                     title: item.data().title,
                     user: item.data().user,
                     type: item.data().type,
-                    id: item.data().id
+                    id: item.data().id,
+                    severity: item.data().severity
                 })
             })
 

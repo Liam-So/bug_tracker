@@ -1,11 +1,15 @@
 import { useState } from 'react'
-import Firebase, { auth } from '../config/firebase';
-import Project from '../interfaces/Project';
-import Dropdown from './ReuseableComp/Dropdown';
+import Firebase, { auth } from '../../config/firebase';
+import Project from '../../interfaces/Project';
+import Ticket from '../../interfaces/Ticket';
+import Select from 'react-select';
+import makeAnimated from 'react-select/animated';
+import { ticketTypeArray, ticketSeverityArray } from './Data'
+
 
 const CreateProject = () => {
 
-    
+    const animatedComponents = makeAnimated();
 
     // Project
     const [modalProject, setModalProject] = useState(false);
@@ -14,22 +18,27 @@ const CreateProject = () => {
     const [sendingProject, setSendingProject] = useState(false);
     const [sentProject, setSentProject] = useState(false);
 
+    // Ticket
+    const [ticketType, setTicketType] = useState<any | null []>([]);
+    const [ticketDescription, setTicketDescription] = useState('');
+    const [ticketTitle, setTicketTitle] = useState('');
+    const [modalTicket, setModalTicket] = useState(false);
+    const [ticketSeverity, setTicketSeverity] = useState<any | null>('');
+
     const projectRef = Firebase.firestore().collection('projects');
 
     const sendNewProjectToDB = () => {
 
         setSendingProject(true);
 
-        let projectObject:Project;
-
-        let arrayOfUsers: string[] = [];
-        let userCode:string | undefined = auth.currentUser?.uid;
+        const arrayOfUsers: string[] = [];
+        const userCode:string | undefined = auth.currentUser?.uid;
 
         if (userCode) {
             arrayOfUsers.push(userCode);
         }
 
-        projectObject = {
+        const projectObject:Project = {
             description: projectDescription,
             id: 'project2',
             num_bugs: 0,
@@ -47,12 +56,29 @@ const CreateProject = () => {
         })
     }
 
+    const ticketRef = Firebase.firestore().collection('tickets');
 
-    // Ticket
-    const [modalTicket, setModalTicket] = useState(false);
+    const sendNewTicketToDB = () => {
+
+        const ticket:Ticket = {
+            description: ticketDescription,
+            id: 'random_id',
+            type: ticketType.value,
+            title: ticketTitle,
+            user: auth.currentUser?.uid,
+            severity: ticketSeverity.value
+        }
+
+        ticketRef.add(ticket)
+        .then(value => console.log(value))
+        .catch(error => console.log(error.message))
+    }
+
 
     return (
         <>
+
+        {/* Buttons */}
         <div className="flex justify-center md:justify-start pt-2">
             <button 
                 className="py-2 px-2 bg-indigo-200 rounded-full text-sm text-gray-800 mr-2 font-semibold transition duration-500 ease-in-out hover:bg-indigo-300 transform hover:-translate-y-1 hover:scale-110"
@@ -74,6 +100,7 @@ const CreateProject = () => {
                 </button>
         </div>
         
+        {/* Modal for creating Project */}
         {modalProject === true ? (
             <div className="h-full flex flex-col justify-center sm:py-12">
             <div className="relative py-3 sm:max-w-xl sm:mx-auto">
@@ -102,8 +129,6 @@ const CreateProject = () => {
                         />
                         </div>
     
-                        <Dropdown/>
-
                         <label className="block">
                         <span className="text-gray-700">Description</span>
                         <textarea 
@@ -135,6 +160,7 @@ const CreateProject = () => {
         ): <></>}
 
 
+        {/* Modal for Creating a Ticket */}
         {modalTicket === true ? (
                 <div className="h-full flex flex-col justify-center sm:py-12">
                 <div className="relative py-3 sm:max-w-xl sm:mx-auto">
@@ -153,37 +179,72 @@ const CreateProject = () => {
                         <div className="py-8 text-base leading-6 space-y-4 text-gray-700 sm:text-lg sm:leading-7">
                             <div className="flex flex-col">
                             <label className="leading-loose">Ticket Name</label>
-                            <input type="text" className="px-4 py-2 border focus:ring-gray-500 focus:border-gray-900 w-full sm:text-sm border-gray-300 rounded-md focus:outline-none text-gray-600" placeholder="Ticket Name"/>
+                            <input 
+                                type="text" 
+                                className="px-4 py-2 border focus:ring-gray-500 focus:border-gray-900 w-full sm:text-sm border-gray-300 rounded-md focus:outline-none text-gray-600" 
+                                placeholder="Ticket Name"
+                                onChange={e => setTicketTitle(e.target.value)}
+                            />
                             </div>
-        
-                            <label className="block">
-                                <span className="text-gray-700">Ticket Type</span>
-                                <select className="form-select block w-full mt-1 px-4 py-2 border focus:ring-gray-500 focus:border-gray-900 w-full sm:text-sm border-gray-300 rounded-md focus:outline-none text-gray-600">
-                                    <option>New Feature ✔️</option>
-                                    <option>Bug 🐛</option>
-                                </select>
-                            </label>
-        
-                            <label className="block">
-                                <span className="text-gray-700">Priority</span>
-                                <select className="form-select block w-full mt-1 px-4 py-2 border focus:ring-gray-500 focus:border-gray-900 w-full sm:text-sm border-gray-300 rounded-md focus:outline-none text-gray-600">
-                                    <option>Critical 🚑</option>
-                                    <option>High 🙀</option>
-                                    <option>Medium 😅</option>
-                                    <option>Low ☕</option>
-                                </select>
-                            </label>
-        
+
+                            {/* <Select
+                            closeMenuOnSelect={false}
+                            components={animatedComponents}
+                            isMulti
+                            options={ticketTypeArray}
+                            className="font-sans"
+                            placeholder="Ticket Type"
+                            onChange={e => {
+                                console.log(e)
+                                setTicketType(e);
+                            }}
+                            /> */}
+                            <Select
+                            closeMenuOnSelect={false}
+                            components={animatedComponents}
+                            options={ticketTypeArray}
+                            className="font-sans"
+                            placeholder="Ticket Type"
+                            onChange={value => {
+                                console.log(value)
+                                setTicketType(value);
+                            }}
+                            />
+
+                            <Select
+                            closeMenuOnSelect={false}
+                            components={animatedComponents}
+                            options={ticketSeverityArray}
+                            className="font-sans"
+                            placeholder="Ticket Severity"
+                            onChange={e => {
+                                console.log(e)
+                                setTicketSeverity(e);
+                            }}
+                            />
+
                             <label className="block">
                             <span className="text-gray-700">Description</span>
-                            <textarea className="form-textarea mt-1 block w-full border focus:ring-gray-500 focus:border-gray-900 w-full border-gray-300 rounded-md focus:outline-none text-gray-600 text-sm p-2" placeholder="Write a description for the ticket."></textarea>
+                            <textarea 
+                                className="form-textarea mt-1 block w-full border focus:ring-gray-500 focus:border-gray-900 w-full border-gray-300 rounded-md focus:outline-none text-gray-600 text-sm p-2" placeholder="Write a description for the ticket."
+                                onChange={e => setTicketDescription(e.target.value)}
+                            >
+                                </textarea>
                             </label>
                         </div>
                         <div className="pt-4 flex items-center space-x-4">
                             <button className="flex justify-center items-center w-full text-gray-900 px-4 py-3 rounded-md focus:outline-none" onClick={() => setModalTicket(false)}>
                                 <svg className="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path></svg> Cancel
                             </button>
-                            <button className="bg-blue-500 flex justify-center items-center w-full text-white px-4 py-3 rounded-md focus:outline-none">Create</button>
+                            <button 
+                                className="bg-blue-500 flex justify-center items-center w-full text-white px-4 py-3 rounded-md focus:outline-none"
+                                onClick={() => {
+                                    sendNewTicketToDB();
+                                    setModalTicket(false);
+                                }}
+                            >
+                                Create
+                            </button>
                         </div>
                         </div>
                     </div>
