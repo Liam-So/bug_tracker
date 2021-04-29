@@ -33,8 +33,9 @@ const Register = () => {
             ref.doc(cred.user?.uid).set({
                 name: `${firstName} ${lastName}`,
                 email: email,
-                userDesc: 'This is a test for a developer',
-                title: 'Full Stack Developer'
+                userDesc: 'replace_me',
+                title: 'replace_me',
+                userId: cred.user?.uid,
             })
 
             setRegistering(false);

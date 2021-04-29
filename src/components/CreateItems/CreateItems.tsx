@@ -1,10 +1,11 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Firebase, { auth } from '../../config/firebase';
 import Project from '../../interfaces/Project';
 import Ticket from '../../interfaces/Ticket';
 import Select from 'react-select';
 import makeAnimated from 'react-select/animated';
-import { ticketTypeArray, ticketSeverityArray } from './Data'
+import { ticketTypeArray, ticketSeverityArray, User } from './Data'
+import { getTicketId, sendTicketToDB, sendProjectToDB } from '../../services'
 
 
 const CreateProject = () => {
@@ -15,8 +16,6 @@ const CreateProject = () => {
     const [modalProject, setModalProject] = useState(false);
     const [projectName, setProjectName] = useState('');
     const [projectDescription, setProjectDescription] = useState('');
-    const [sendingProject, setSendingProject] = useState(false);
-    const [sentProject, setSentProject] = useState(false);
 
     // Ticket
     const [ticketType, setTicketType] = useState<any | null []>([]);
@@ -25,55 +24,54 @@ const CreateProject = () => {
     const [modalTicket, setModalTicket] = useState(false);
     const [ticketSeverity, setTicketSeverity] = useState<any | null>('');
 
-    const projectRef = Firebase.firestore().collection('projects');
+    const arrayOfUsers:string[] = []; 
 
-    const sendNewProjectToDB = () => {
+    if (auth.currentUser?.uid) 
+        { arrayOfUsers.push(auth.currentUser?.uid); }
 
-        setSendingProject(true);
+    const projectObject:Project = {
+        description: projectDescription,
+        id: getTicketId(),
+        num_bugs: 0,
+        status: 'pending',
+        team: arrayOfUsers,
+        name: projectName
+    }
 
-        const arrayOfUsers: string[] = [];
-        const userCode:string | undefined = auth.currentUser?.uid;
+    // Users
+    const [users, setUsers] = useState<User[]>([]);
+    const [assignedUser, setAssignedUser] = useState<any | null>();
 
-        if (userCode) {
-            arrayOfUsers.push(userCode);
-        }
+    const ticket:Ticket = {
+        description: ticketDescription,
+        id: getTicketId(),
+        type: ticketType.value,
+        title: ticketTitle,
+        user: assignedUser ? assignedUser.user : null,
+        severity: ticketSeverity.value
+    }
 
-        const projectObject:Project = {
-            description: projectDescription,
-            id: 'project2',
-            num_bugs: 0,
-            status: 'pending',
-            team: arrayOfUsers,
-            name: projectName
-        }
+    // Users
+    const userRef = Firebase.firestore().collection('users');
 
-        projectRef.add(projectObject)
-        .then(() => {
-            setSendingProject(true)
-        })
-        .catch(error => {
-            console.log(error.message);
+    const getAllUsers = () => {
+        userRef.onSnapshot(array => {
+            const items:User[] = [];
+
+            array.forEach(item => items.push({
+                value: item.data().name,
+                label: item.data().name,
+                user: item.data().userId
+            }));
+
+            setUsers(items);
         })
     }
 
-    const ticketRef = Firebase.firestore().collection('tickets');
-
-    const sendNewTicketToDB = () => {
-
-        const ticket:Ticket = {
-            description: ticketDescription,
-            id: 'random_id',
-            type: ticketType.value,
-            title: ticketTitle,
-            user: auth.currentUser?.uid,
-            severity: ticketSeverity.value
-        }
-
-        ticketRef.add(ticket)
-        .then(value => console.log(value))
-        .catch(error => console.log(error.message))
-    }
-
+    useEffect(() => {
+        getAllUsers();
+        // eslint-disable-next-line
+    }, []);
 
     return (
         <>
@@ -128,6 +126,14 @@ const CreateProject = () => {
                             onChange={e => setProjectName(e.target.value)}
                         />
                         </div>
+
+                        <Select
+                            closeMenuOnSelect={false}
+                            components={animatedComponents}
+                            isMulti
+                            options={users}
+                            placeholder="Add Team Members"
+                        />
     
                         <label className="block">
                         <span className="text-gray-700">Description</span>
@@ -145,7 +151,7 @@ const CreateProject = () => {
                         <button 
                             className="bg-blue-500 flex justify-center items-center w-full text-white px-4 py-3 rounded-md focus:outline-none"
                             onClick={() => {
-                                sendNewProjectToDB();
+                                sendProjectToDB(projectObject);
                                 setModalProject(false);
                             }}
                         >
@@ -187,18 +193,16 @@ const CreateProject = () => {
                             />
                             </div>
 
-                            {/* <Select
-                            closeMenuOnSelect={false}
-                            components={animatedComponents}
-                            isMulti
-                            options={ticketTypeArray}
-                            className="font-sans"
-                            placeholder="Ticket Type"
-                            onChange={e => {
-                                console.log(e)
-                                setTicketType(e);
-                            }}
-                            /> */}
+                            <Select
+                                closeMenuOnSelect={false}
+                                components={animatedComponents}
+                                options={users}
+                                placeholder="Assign User"
+                                onChange={value => {
+                                    setAssignedUser(value)
+                                }}
+                            />
+
                             <Select
                             closeMenuOnSelect={false}
                             components={animatedComponents}
@@ -206,7 +210,6 @@ const CreateProject = () => {
                             className="font-sans"
                             placeholder="Ticket Type"
                             onChange={value => {
-                                console.log(value)
                                 setTicketType(value);
                             }}
                             />
@@ -218,7 +221,6 @@ const CreateProject = () => {
                             className="font-sans"
                             placeholder="Ticket Severity"
                             onChange={e => {
-                                console.log(e)
                                 setTicketSeverity(e);
                             }}
                             />
@@ -239,7 +241,7 @@ const CreateProject = () => {
                             <button 
                                 className="bg-blue-500 flex justify-center items-center w-full text-white px-4 py-3 rounded-md focus:outline-none"
                                 onClick={() => {
-                                    sendNewTicketToDB();
+                                    sendTicketToDB(ticket);
                                     setModalTicket(false);
                                 }}
                             >
