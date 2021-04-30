@@ -3,9 +3,9 @@ import Project from "../../interfaces/Project";
 
 const HomeTable = ({ projects } : { projects: Project[] | undefined })  => {
     return (
-    <div className="bg-white pb-4 px-4 rounded-md w-full flex justify-center">
+    <div className="rounded-md w-full md:w-6/12 flex justify-center">
 
-    <div className="overflow-x-auto mt-6 w-10/12 md:w-9/12">
+    <div className="overflow-x-auto p-8 w-full">
 
       <table className="table-auto border-collapse w-full">
         <thead>
