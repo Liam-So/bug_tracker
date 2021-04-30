@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import Firebase, { auth } from '../../config/firebase';
 import Project from '../../interfaces/Project';
 import Ticket from '../../interfaces/Ticket';
-import Select from 'react-select';
+import Select, { OptionsType, ValueType, OptionTypeBase } from 'react-select';
 import makeAnimated from 'react-select/animated';
 import { ticketTypeArray, ticketSeverityArray, User } from './Data'
 import { getTicketId, sendTicketToDB, sendProjectToDB } from '../../services'
@@ -16,6 +16,7 @@ const CreateProject = () => {
     const [modalProject, setModalProject] = useState(false);
     const [projectName, setProjectName] = useState('');
     const [projectDescription, setProjectDescription] = useState('');
+    const [assignedUsers, setAssignedUsers] = useState<any | null>();
 
     // Ticket
     const [ticketType, setTicketType] = useState<any | null []>([]);
@@ -24,10 +25,10 @@ const CreateProject = () => {
     const [modalTicket, setModalTicket] = useState(false);
     const [ticketSeverity, setTicketSeverity] = useState<any | null>('');
 
-    const arrayOfUsers:string[] = []; 
 
-    if (auth.currentUser?.uid) 
-        { arrayOfUsers.push(auth.currentUser?.uid); }
+    // Take the assigned users and extract the userId
+    const arrayOfUsers:string[] = [];
+    for (const key in assignedUsers)  { arrayOfUsers.push(assignedUsers[key].user); }
 
     const projectObject:Project = {
         description: projectDescription,
@@ -40,14 +41,14 @@ const CreateProject = () => {
 
     // Users
     const [users, setUsers] = useState<User[]>([]);
-    const [assignedUser, setAssignedUser] = useState<any | null>();
 
     const ticket:Ticket = {
         description: ticketDescription,
         id: getTicketId(),
         type: ticketType.value,
         title: ticketTitle,
-        user: assignedUser ? assignedUser.user : null,
+        user: '',
+        // user: assignedUser ? assignedUser.user : null,
         severity: ticketSeverity.value
     }
 
@@ -133,6 +134,9 @@ const CreateProject = () => {
                             isMulti
                             options={users}
                             placeholder="Add Team Members"
+                            onChange={e => {
+                                setAssignedUsers(e)
+                            }}
                         />
     
                         <label className="block">
@@ -199,7 +203,7 @@ const CreateProject = () => {
                                 options={users}
                                 placeholder="Assign User"
                                 onChange={value => {
-                                    setAssignedUser(value)
+                                    setAssignedUsers(value)
                                 }}
                             />
 
