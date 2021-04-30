@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react'
-import Firebase, { auth } from '../../config/firebase';
+import Firebase from '../../config/firebase';
 import Project from '../../interfaces/Project';
 import Ticket from '../../interfaces/Ticket';
-import Select, { OptionsType, ValueType, OptionTypeBase } from 'react-select';
+import Select from 'react-select';
 import makeAnimated from 'react-select/animated';
 import { ticketTypeArray, ticketSeverityArray, User } from './Data'
 import { getTicketId, sendTicketToDB, sendProjectToDB } from '../../services'
@@ -78,7 +78,7 @@ const CreateProject = () => {
         <>
 
         {/* Buttons */}
-        <div className="flex justify-center md:justify-start pt-2">
+        <div className="flex justify-center md:justify-start pt-2 2xl:px-12">
             <button 
                 className="py-2 px-2 bg-indigo-200 rounded-full text-sm text-gray-800 mr-2 font-semibold transition duration-500 ease-in-out hover:bg-indigo-300 transform hover:-translate-y-1 hover:scale-110"
                 onClick={() => {

@@ -70,6 +70,11 @@ const Home = () => {
     return (
         <div>
             <Navbar/>
+            <div className="flex justify-center items-center pt-4">
+                <div className="w-full md:w-9/12 xl:w-10/12 2xl:w-9/12">
+                    <CreateItems />
+                </div>
+            </div> 
             <div className="flex flex-col md:flex-row items-start px-8 md:px-20 2xl:px-60">
                 <AssignedTable tickets={userTickets} />
                 <HomeTable projects={userProjects} />

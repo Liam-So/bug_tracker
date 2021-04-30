@@ -1,4 +1,3 @@
-import { Link } from 'react-router-dom';
 import Ticket from "../../interfaces/Ticket";
 import AssignedTableItem from "./AssignedTableItem";
 
