@@ -9,13 +9,13 @@ const AssignedTable = ({ tickets }: { tickets: Ticket[] | undefined }) => {
                         <p className="font-bold text-md p-4 text-black dark:text-white">
                             My Tasks
                             <span className="text-sm text-gray-500 dark:text-gray-300 dark:text-white ml-2">
-                                (05)
+                                {tickets ? tickets.length : 0}
                             </span>
                         </p>
                         <ul>
                             {tickets ? tickets.map((e, index) => {
                             return (
-                                <AssignedTableItem item={e} key={index}/>
+                                <AssignedTableItem item={e} key={index} num={index} />
                             )
                             }): (<></>)}
                         </ul>
