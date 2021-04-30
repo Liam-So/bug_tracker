@@ -25,3 +25,44 @@ export const sendProjectToDB = (project: Project) => {
         .then(() => console.log(project))
         .catch(error => console.log(error.message));
 }
+
+
+type ProjectItem = {
+    projectId: string;
+    name: string;
+}
+
+
+export const getProjectList = async() => {
+    const listOfProjects: ProjectItem[] = [];
+
+    await projectRef.get()
+    .then(value => {
+        value.forEach(item => {
+            listOfProjects.push({
+                projectId: item.id,
+                name: item.data().name
+            })
+        });
+    })
+    .catch(error => console.log(error.message()));
+
+    return listOfProjects;
+}
+
+// export function getProjectList(): ProjectItem[] {
+//     const listOfProjects: ProjectItem[] = [];
+
+//     projectRef.get()
+//     .then(value => {
+//         value.forEach(item => {
+//             listOfProjects.push({
+//                 projectId: item.id,
+//                 name: item.data().name
+//             })
+//         });
+//     })
+//     .catch(error => console.log(error.message()));
+
+//     return listOfProjects;
+// }

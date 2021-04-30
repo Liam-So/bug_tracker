@@ -5,12 +5,18 @@ import Ticket from '../../interfaces/Ticket';
 import Select from 'react-select';
 import makeAnimated from 'react-select/animated';
 import { ticketTypeArray, ticketSeverityArray, User } from './Data'
-import { getTicketId, sendTicketToDB, sendProjectToDB } from '../../services'
+import { getTicketId, sendTicketToDB, sendProjectToDB, getProjectList } from '../../services'
 
 
 const CreateProject = () => {
 
     const animatedComponents = makeAnimated();
+
+    const testArray = getProjectList()
+                        .then(value => console.log(value))
+                        .catch(error => console.log(error.message));
+
+    console.log(testArray)
 
     // Project
     const [modalProject, setModalProject] = useState(false);
@@ -24,7 +30,7 @@ const CreateProject = () => {
     const [ticketTitle, setTicketTitle] = useState('');
     const [modalTicket, setModalTicket] = useState(false);
     const [ticketSeverity, setTicketSeverity] = useState<any | null>('');
-
+    const [assignUser, setAssignUser] = useState<any | null>();
 
     // Take the assigned users and extract the userId
     const arrayOfUsers:string[] = [];
@@ -47,8 +53,7 @@ const CreateProject = () => {
         id: getTicketId(),
         type: ticketType.value,
         title: ticketTitle,
-        user: '',
-        // user: assignedUser ? assignedUser.user : null,
+        user: assignUser ? assignUser.user : '',
         severity: ticketSeverity.value
     }
 
@@ -202,9 +207,7 @@ const CreateProject = () => {
                                 components={animatedComponents}
                                 options={users}
                                 placeholder="Assign User"
-                                onChange={value => {
-                                    setAssignedUsers(value)
-                                }}
+                                onChange={value => setAssignUser(value)}
                             />
 
                             <Select
