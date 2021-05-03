@@ -15,7 +15,7 @@ const HomeTableItem = ({ item }: { item:Project }) => {
     return (
         <tr className="hover:bg-gray-100 border-b border-gray-200 py-10">
             <td className="px-4 py-4">{item.name}</td>
-            <td className="px-4 py-4">{item.num_bugs}</td>
+            <td className="px-4 py-4">{item.num_bugs.length}</td>
             <td className="px-4 py-4">
                 {getStatus()}
             </td>

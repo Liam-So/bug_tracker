@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import Firebase, { auth } from "../../config/firebase";
+import * as React from 'react';
+import { auth } from "../../config/firebase";
 import Project from "../../interfaces/Project";
 import Ticket from "../../interfaces/Ticket";
 import User from "../../interfaces/User";
@@ -16,15 +16,15 @@ import {
 
 const CreateProject = () => {
   // Project
-  const [modalProject, setModalProject] = useState(false);
-  const [projectName, setProjectName] = useState("");
-  const [projectDescription, setProjectDescription] = useState("");
-  const [assignedUsers, setAssignedUsers] = useState<any | null>();
+  const [modalProject, setModalProject] = React.useState(false);
+  const [projectName, setProjectName] = React.useState("");
+  const [projectDescription, setProjectDescription] = React.useState("");
+  const [assignedUsers, setAssignedUsers] = React.useState<any | null>();
   // used by both project and ticket
-  const [users, setUsers] = useState<User[]>([]); 
-  const [projects, setProjects] = useState<ProjectItem[]>([]);
+  const [users, setUsers] = React.useState<User[]>([]); 
+  const [projects, setProjects] = React.useState<ProjectItem[]>([]);
 
-  useEffect(() => {
+  React.useEffect(() => {
     const getUsers = async () => {
       const res = await getUserList();
 
@@ -52,24 +52,25 @@ const CreateProject = () => {
     return res;
   };
 
+  // Ticket
+  const [ticketType, setTicketType] = React.useState<any | null[]>([]);
+  const [ticketDescription, setTicketDescription] = React.useState("");
+  const [ticketTitle, setTicketTitle] = React.useState("");
+  const [modalTicket, setModalTicket] = React.useState(false);
+  const [ticketSeverity, setTicketSeverity] = React.useState<any | null>("");
+  const [ticketProject, setTicketProject] = React.useState<any | null>("");
+  const [assignUser, setAssignUser] = React.useState<any | null>();
+
+  // Object creation to send to the DB
+
   const projectObject: Project = {
     description: projectDescription,
     id: getTicketId(),
-    num_bugs: 0,
+    num_bugs: [],
     status: "pending",
     team: getAssignedUsers(),
     name: projectName,
   };
-
-  // Ticket
-  const [ticketType, setTicketType] = useState<any | null[]>([]);
-  const [ticketDescription, setTicketDescription] = useState("");
-  const [ticketTitle, setTicketTitle] = useState("");
-  const [modalTicket, setModalTicket] = useState(false);
-  const [ticketSeverity, setTicketSeverity] = useState<any | null>("");
-  const [ticketProject, setTicketProject] = useState<any | null>("");
-  const [assignUser, setAssignUser] = useState<any | null>();
-
 
   const ticket: Ticket = {
     description: ticketDescription,
@@ -78,7 +79,8 @@ const CreateProject = () => {
     title: ticketTitle,
     user: assignUser,
     severity: ticketSeverity.value,
-    project: ticketProject
+    project: ticketProject.projectId,
+    comments: []
   };
 
   return (

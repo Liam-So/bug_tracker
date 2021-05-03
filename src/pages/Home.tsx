@@ -8,11 +8,7 @@ import Project from '../interfaces/Project';
 import Ticket from '../interfaces/Ticket';
 
 const Home = () => {
-
-    if (auth.currentUser?.uid) {
-        console.log(auth.currentUser.uid)
-    }
-
+    
     const [userProjects, setUserProjects] = useState<Project[]>();
     const [userTickets, setUserTickets] = useState<Ticket[]>();
 
@@ -25,6 +21,7 @@ const Home = () => {
             const items: Project[] = [];
 
             e.forEach(item => {
+                console.log(item.data())
                 items.push({
                     description: item.data().description,
                     id: item.data().id,
@@ -58,7 +55,8 @@ const Home = () => {
                     type: item.data().type,
                     id: item.data().id,
                     severity: item.data().severity,
-                    project: item.data().project
+                    project: item.data().project,
+                    comments: item.data().comments
                 });
             });
 
