@@ -9,6 +9,10 @@ import Ticket from '../interfaces/Ticket';
 
 const Home = () => {
 
+    if (auth.currentUser?.uid) {
+        console.log(auth.currentUser.uid)
+    }
+
     const [userProjects, setUserProjects] = useState<Project[]>();
     const [userTickets, setUserTickets] = useState<Ticket[]>();
 
@@ -53,9 +57,10 @@ const Home = () => {
                     user: item.data().user,
                     type: item.data().type,
                     id: item.data().id,
-                    severity: item.data().severity
-                })
-            })
+                    severity: item.data().severity,
+                    project: item.data().project
+                });
+            });
 
             setUserTickets(items);
         })

@@ -5,4 +5,5 @@ export default interface Ticket {
     type: string;
     user: string | undefined;
     severity: string;
+    project: string;
 }
