@@ -10,8 +10,3 @@ export const ticketSeverityArray = [
     { value: 'low', label: 'Low ☕' }
 ];
 
-export interface User {
-    value: string;
-    label: string;
-    user: string;
-}
