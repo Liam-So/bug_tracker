@@ -9,7 +9,6 @@ import ProjectView from '../components/ProjectsTable/ProjectView'
 
 const Projects = (props: RouteComponentProps<any>) => {
     
-    const [message, setMessage] = React.useState('');
     const [uniqueProject, setUniqueProject] = React.useState<Project>();
     const [listOfProjects, setListOfProjects] = React.useState<Project[]>([]);
     
@@ -18,7 +17,6 @@ const Projects = (props: RouteComponentProps<any>) => {
         let userId = auth.currentUser?.uid;
 
         if (id) {
-            setMessage(`The id is ${id}`);
 
             const getProjectDetails = async () => {
                 const res = await getProjectById(id);
@@ -29,7 +27,6 @@ const Projects = (props: RouteComponentProps<any>) => {
             console.log(uniqueProject)
         }
         else {
-            setMessage(`No id provided`);
 
             const getAllProjects = async () => {
                 const res = await getProjectList(String(userId));
@@ -40,6 +37,7 @@ const Projects = (props: RouteComponentProps<any>) => {
             getAllProjects();
             console.log(listOfProjects)
         }
+        // eslint-disable-next-line
     }, []);
 
     return (

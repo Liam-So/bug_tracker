@@ -173,6 +173,27 @@ app.get("/tickets/:id", async (req, res) => {
   }
 });
 
+// get tickets for specific project
+app.get("/tickets/forProject/:id", async (req, res) => {
+  try {
+    let projectId = req.params.id;
+
+    const arrayOfTickets = await ticketRef.where('project', '==', projectId).get();
+
+    const resArray = [];
+
+    arrayOfTickets.forEach(ticket => {
+      resArray.push(ticket.data());
+    });
+
+    res.status(200).send(resArray); 
+  } catch {
+    res.status(400).send({
+      message: "Something went wrong"
+    });
+  }
+})
+
 // send a new ticket
 app.post("/tickets", async (req, res) => {
   console.log(req.body)

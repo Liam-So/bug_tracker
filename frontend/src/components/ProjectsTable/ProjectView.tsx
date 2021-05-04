@@ -1,10 +1,27 @@
 import Project from "../../interfaces/Project";
-
+import * as React from "react"
+import { getTicketsForProject } from "../../services/ticketServices";
+import Ticket from "../../interfaces/Ticket";
 type projectViewProp = {
     project: Project | undefined;
 }
 
 const ProjectView = (props: projectViewProp) => {
+    const [tickets, setTickets] = React.useState<Ticket[]>([]);
+    const projectId = props.project?.id;
+
+    React.useEffect(() => {
+        const getTickets = async () => {
+            const res = await getTicketsForProject(String(projectId));
+            console.log(res.data)
+            setTickets(res.data);
+        }
+
+        getTickets();
+        console.log(tickets)
+
+    }, [tickets, projectId]);
+
   return (
     <div>
       <section className=" text-gray-200">
@@ -29,64 +46,33 @@ const ProjectView = (props: projectViewProp) => {
                 <div className="rounded bg-gray-100 p-4 min-h-full max-h-screen overflow-auto">
                   <div className="flex-grow text-gray-800">
                     <h2 className=" text-xl title-font font-medium mb-3">
-                      Number of Bugs 🐛
+                      Number of Tickets
                     </h2>
                     <p className="leading-relaxed text-sm text-justify">
                       You have <span className="text-green-500">{props.project?.num_bugs.length}</span> for this project.
                     </p>
 
-                    <div className="w-full h-full overflow-auto shadow bg-white" id="journal-scroll"></div>
-                    <table className="w-full">
-                        <tbody className="">
-                            <tr className="relative transform scale-100
-                                text-xs py-1 border-b-2 border-indigo-100 cursor-default">
-                                <td className="pl-5 pr-3 whitespace-no-wrap">
-                                    <div className="text-gray-400">Today</div>
-                                    <div>07:45</div>
-                                </td>
-                                <td className="px-2 py-2 whitespace-no-wrap">
-                                    <div className="leading-5 text-gray-500 font-medium">Taylor Otwel</div>
-                                    <div className="leading-5 text-gray-900">Create pull request #1213
-                                    <a className="text-blue-500 hover:underline" href="#">#231231</a>
-                                    </div>
-                                    <div className="leading-5 text-gray-800">Hello message</div>
-                                </td>
-                            </tr>
-                            <tr className="relative transform scale-100
-                                text-xs py-1 border-b-2 border-blue-100 cursor-default">
-                                <td className="pl-5 pr-3 whitespace-no-wrap">
-                                    <div className="text-gray-400">Today</div>
-                                    <div>07:45</div>
-                                </td>
-                                <td className="px-2 py-2 whitespace-no-wrap">
-                                    <div className="leading-5 text-gray-500 font-medium">Taylor Otwel</div>
-                                    <div className="leading-5 text-gray-900">Create pull request #1213
-                                    <a className="text-blue-500 hover:underline" href="#">#231231</a>
-                                    </div>
-                                    <div className="leading-5 text-gray-800">Hello message</div>
-                                </td>
-                            </tr>
-                            <tr className="relative transform scale-100
-                                text-xs py-1 border-b-2 border-blue-100 cursor-pointer
-                                ">
-                                <td className="pl-5 pr-3 whitespace-no-wrap">
-                                    <div className="text-gray-400">24 jule</div>
-                                    <div>07:45</div>
-                                </td>
-                                <td className="px-2 py-2 whitespace-no-wrap">
-                                    <div className="leading-5 text-gray-500 font-medium">Taylor Otwel</div>
-                                    <div className="leading-5 text-gray-900">Create pull request #1213
-                                    <a className="text-blue-500 hover:underline" href="#">#231231</a>
-                                    </div>
-                                    <div className="leading-5 text-gray-800">Hello message</div>
-                                </td>
-                            </tr>
-                            
+                    <div className="w-full h-full overflow-auto shadow bg-white mt-4"></div>
+                    <table className="w-full border rounded-medium">
+                        <tbody>
+                            {tickets.map((ticket, index) => {
+                                return (
+                                    <tr key={index} className="relative transform scale-100
+                                        py-1 border-b-2 border-indigo-100 cursor-default text-base h-12">
+                                        <td className="pl-5 pr-3 whitespace-no-wrap">
+                                            <div className="text-gray-400">{ticket.type}</div>
+                                            <div>{ticket.title}</div>
+                                        </td>
+                                        <td className="px-2 py-2 whitespace-no-wrap">
+                                            <div className="leading-5 text-gray-900">{ticket.description}
+                                            <a className="text-blue-500 hover:underline" href="/"> {ticket.id}</a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                )
+                            })}                            
                         </tbody>
                         </table>
-
-
-
 
                   </div>
                 </div>
@@ -96,25 +82,9 @@ const ProjectView = (props: projectViewProp) => {
             <div className="p-10 md:w-1/3 md:mb-0 mb-6 flex flex-col w-full">
               <div className="pattern-dots-md gray-light">
                 <div className="rounded bg-gray-100 p-4">
-                  <div className="w-10 h-10 inline-flex items-center justify-center rounded-full bg-blue-100 text-blue-500 mb-5 flex-shrink-0">
-                    <svg
-                      className="w-6 h-6"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"
-                      ></path>
-                    </svg>
-                  </div>
                   <div className="flex-grow text-gray-800">
                     <h2 className=" text-xl title-font font-medium mb-3">
-                      Status
+                      Team Members
                     </h2>
                     <p className="leading-relaxed text-sm text-justify">
                       Click <span className="text-red-400">here</span> to change the status.
