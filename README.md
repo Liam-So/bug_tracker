@@ -1,6 +1,6 @@
 # Bug Tracker Application
 
-* Tech used: Firebase, TypeScript, and TailwindCSS.
+* Tech used: Firebase, TypeScript, Express, and TailwindCSS.
 
 ### `npm start`
 
