@@ -6,7 +6,7 @@ const HomeTableItem = ({ item }: { item:Project }) => {
     const history = useHistory();
 
     const handleClick = () => {
-        history.push('/projects');
+        history.push(`/projects/${item.id}`);
     }
 
     const getStatus = () => {

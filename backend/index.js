@@ -70,6 +70,10 @@ app.get("/users/:id", async (req, res) => {
   }
 });
 
+// get all users for a specific project
+// app.get("/users/forProject/:id", async (req, res) => {
+// });
+
 // get all projects
 app.get("/projects", async (req, res) => {
   try {

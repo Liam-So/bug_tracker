@@ -37,8 +37,7 @@ const Projects = (props: RouteComponentProps<any>) => {
             getAllProjects();
             console.log(listOfProjects)
         }
-        // eslint-disable-next-line
-    }, []);
+    }, [listOfProjects, props.match.params.id, uniqueProject]);
 
     return (
         <div>
