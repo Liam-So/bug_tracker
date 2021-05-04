@@ -51,7 +51,14 @@ const routes: Route[] = [
         protected: false
     },
     {
-        path: '/projects',
+        path: '/projects/',
+        exact: true,
+        component: Projects,
+        name: 'Projects Page',
+        protected: true
+    },
+    {
+        path: '/projects/:id',
         exact: true,
         component: Projects,
         name: 'Projects Page',

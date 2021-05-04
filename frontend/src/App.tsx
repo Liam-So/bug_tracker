@@ -44,7 +44,7 @@ function App() {
                   </AuthRoute>
                 );
 
-              return <route.component {...routeProps} />;
+              return <route.component name={route.name} {...routeProps} />;
               }}
             />
           ))}

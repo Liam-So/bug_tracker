@@ -10,6 +10,12 @@ export const getProjectList = async (userID: string) => {
     return res.data;
 }
 
+// Gets specific project according to id
+export const getProjectById = async (projectId: string) => {
+    const res = await axios.get(`${PROJECT_URL}/${projectId}`);
+    return res.data;
+}
+
 // Send project to DB
 export const sendProject = async (project: Project) => {
     return await axios.post(`${PROJECT_URL}`, project);

@@ -70,23 +70,25 @@ app.get("/users/:id", async (req, res) => {
   }
 });
 
-// get all projects that are assigned to a user
-app.get("/projects/forUser/:id", async (req, res) => {
+// get all projects
+app.get("/projects", async (req, res) => {
   try {
-    let userId = req.params.id;
-    const arrayOfProjects = await projectRef.where("team", "array-contains", userId).get();
+    const snapshot = await projectRef.get();
 
     const arrayOfItems = [];
-    arrayOfProjects.forEach((doc) => {
+
+    snapshot.forEach(doc => {
       arrayOfItems.push(doc.data());
     });
-    res.status(200).json(arrayOfItems);
+
+    res.status(200).send(arrayOfItems);
   } catch {
-    res.status(400).json({
-      message: "Something went wrong",
-    });
+    res.status(400).send({
+      message: "Something went wrong"
+    })
   }
-});
+})
+
 
 // get specific project
 app.get("/projects/:id", async (req, res) => {
@@ -119,6 +121,24 @@ app.post("/projects", async (req, res) => {
       });
     } catch {
       res.status(400).send({
+        message: "Something went wrong",
+      });
+    }
+  });
+
+  // get all projects that are assigned to a user
+  app.get("/projects/forUser/:id", async (req, res) => {
+    try {
+      let userId = req.params.id;
+      const arrayOfProjects = await projectRef.where("team", "array-contains", userId).get();
+
+      const arrayOfItems = [];
+      arrayOfProjects.forEach((doc) => {
+        arrayOfItems.push(doc.data());
+      });
+      res.status(200).json(arrayOfItems);
+    } catch {
+      res.status(400).json({
         message: "Something went wrong",
       });
     }
