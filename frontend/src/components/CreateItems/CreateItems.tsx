@@ -5,14 +5,10 @@ import Ticket from "../../interfaces/Ticket";
 import User from "../../interfaces/User";
 import Select from "react-select";
 import { ticketTypeArray, ticketSeverityArray } from "./Data";
-import {
-  getTicketId,
-  sendTicketToDB,
-  sendProjectToDB,
-  getUserList,
-  getProjectList,
-  ProjectItem,
-} from "../../services";
+import { getTicketId, getUserIdsFromArray } from "../../services";
+import { getProjectList, sendProject } from "../../services/projectServices"
+import { getUserList } from "../../services/userServices"
+import { sendTicket } from "../../services/ticketServices"
 
 const CreateProject = () => {
   // Project
@@ -22,35 +18,7 @@ const CreateProject = () => {
   const [assignedUsers, setAssignedUsers] = React.useState<any | null>();
   // used by both project and ticket
   const [users, setUsers] = React.useState<User[]>([]); 
-  const [projects, setProjects] = React.useState<ProjectItem[]>([]);
-
-  React.useEffect(() => {
-    const getUsers = async () => {
-      const res = await getUserList();
-
-      setUsers(res);
-    };
-
-    const getProjects = async () => {
-        const res = await getProjectList(String(auth.currentUser?.uid));
-
-        setProjects(res);
-    }
-
-    getUsers();
-    getProjects();
-  }, []);
-
-  const getAssignedUsers = () => {
-    const res: string[] = [];
-    if (assignedUsers) {
-      assignedUsers.forEach((item: any) => {
-        res.push(item.userId);
-      });
-    }
-
-    return res;
-  };
+  const [projects, setProjects] = React.useState<Project[]>([]);
 
   // Ticket
   const [ticketType, setTicketType] = React.useState<any | null[]>([]);
@@ -62,14 +30,15 @@ const CreateProject = () => {
   const [assignUser, setAssignUser] = React.useState<any | null>();
 
   // Object creation to send to the DB
-
   const projectObject: Project = {
     description: projectDescription,
     id: getTicketId(),
     num_bugs: [],
     status: "pending",
-    team: getAssignedUsers(),
+    team: getUserIdsFromArray(assignedUsers),
     name: projectName,
+    value: projectName,
+    label: projectName
   };
 
   const ticket: Ticket = {
@@ -79,9 +48,27 @@ const CreateProject = () => {
     title: ticketTitle,
     user: assignUser,
     severity: ticketSeverity.value,
-    project: ticketProject.projectId,
-    comments: []
+    project: ticketProject.id,
+    comments: [],
+    value: ticketTitle,
+    label: ticketTitle
   };
+
+  // Call the API's and set the values
+  React.useEffect(() => {
+    const getUsers = async () => {
+      const res = await getUserList();
+      setUsers(res);
+    };
+
+    const getProjects = async () => {
+        const res = await getProjectList(String(auth.currentUser?.uid));
+        setProjects(res);
+    }
+
+    getUsers();
+    getProjects();
+  }, []);
 
   return (
     <>
@@ -190,7 +177,7 @@ const CreateProject = () => {
                     <button
                       className="bg-blue-500 flex justify-center items-center w-full text-white px-4 py-3 rounded-md focus:outline-none"
                       onClick={() => {
-                        sendProjectToDB(projectObject);
+                        sendProject(projectObject);
                         setModalProject(false);
                       }}
                     >
@@ -250,7 +237,10 @@ const CreateProject = () => {
                       closeMenuOnSelect={true}
                       options={projects}
                       placeholder="Assign to Project"
-                      onChange={(value) => setTicketProject(value)}
+                      onChange={(value) => {
+                        console.log(value)
+                        setTicketProject(value);
+                      }}
                     />
 
                     <Select
@@ -316,7 +306,7 @@ const CreateProject = () => {
                     <button
                       className="bg-blue-500 flex justify-center items-center w-full text-white px-4 py-3 rounded-md focus:outline-none"
                       onClick={() => {
-                        sendTicketToDB(ticket);
+                        sendTicket(ticket);
                         setModalTicket(false);
                       }}
                     >
