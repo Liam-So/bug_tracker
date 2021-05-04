@@ -2,7 +2,6 @@ import express from "express";
 import Cors from "cors";
 import env from "dotenv";
 import admin from "firebase-admin";
-// import serviceData from './bug-tracker-ab8f8-firebase-adminsdk-rk140-338bd0e98b.json'
 
 // App config
 const app = express();
