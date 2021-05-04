@@ -5,4 +5,6 @@ export default interface Project {
     status: string;
     team: string[];
     name: string;
+    value: string;
+    label: string;
 }

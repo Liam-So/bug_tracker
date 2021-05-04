@@ -6,5 +6,7 @@ export default interface Ticket {
     user: string | undefined;
     severity: string;
     project: string;
-    comments: string[]
+    comments: string[];
+    value: string;
+    label: string;
 }

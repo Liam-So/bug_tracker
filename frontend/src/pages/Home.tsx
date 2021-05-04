@@ -28,7 +28,9 @@ const Home = () => {
                     num_bugs: item.data().num_bugs,
                     status: item.data().status,
                     team: item.data().team,
-                    name: item.data().name
+                    name: item.data().name,
+                    value: item.data().value,
+                    label: item.data().label
                 })
             })
 
@@ -56,7 +58,9 @@ const Home = () => {
                     id: item.data().id,
                     severity: item.data().severity,
                     project: item.data().project,
-                    comments: item.data().comments
+                    comments: item.data().comments,
+                    value: item.data().value,
+                    label: item.data().label
                 });
             });
 
