@@ -1,78 +1,35 @@
-import { useEffect, useState } from 'react';
+import * as React from 'react';
 import AssignedTable from '../components/AssignedTable/AssignedTable';
 import CreateItems from '../components/CreateItems/CreateItems';
 import HomeTable from '../components/HomeTable/HomeTable';
 import { Navbar } from '../components/Navbar/Navbar';
-import Firebase, { auth } from '../config/firebase';
+import { auth } from '../config/firebase';
 import Project from '../interfaces/Project';
 import Ticket from '../interfaces/Ticket';
+import { getProjectList } from '../services/projectServices';
+import { getTicketListForUser } from '../services/ticketServices';
 
 const Home = () => {
     
-    const [userProjects, setUserProjects] = useState<Project[]>();
-    const [userTickets, setUserTickets] = useState<Ticket[]>();
+    const [userProjects, setUserProjects] = React.useState<Project[]>();
+    const [userTickets, setUserTickets] = React.useState<Ticket[]>();
 
-    const projectRef = Firebase.firestore().collection('projects');
-    const ticketRef = Firebase.firestore().collection('tickets');
 
-    function getUserProjects() {
-        projectRef.where('team', 'array-contains', auth.currentUser?.uid).onSnapshot(e => {
-            
-            const items: Project[] = [];
+    React.useEffect(() => {
+        let userId = auth.currentUser?.uid;
+        const getUserProjects = async() => {
+            const res = await getProjectList(String(userId));
+            setUserProjects(res);
+        }
 
-            e.forEach(item => {
-                console.log(item.data())
-                items.push({
-                    description: item.data().description,
-                    id: item.data().id,
-                    num_bugs: item.data().num_bugs,
-                    status: item.data().status,
-                    team: item.data().team,
-                    name: item.data().name,
-                    value: item.data().value,
-                    label: item.data().label
-                })
-            })
+        const getUserTickets = async() => {
+            const res = await getTicketListForUser(String(userId));
+            setUserTickets(res.data);
+        }
 
-            setUserProjects(items);
-        })
-    }
-    
-    useEffect(() => {
         getUserProjects();
-        // eslint-disable-next-line
-    }, [])
-
-
-    function getUserTickets() {
-        ticketRef.where('user', '==', auth.currentUser?.uid).onSnapshot(e => {
-
-            const items: Ticket[] = [];
-
-            e.forEach(item => {
-                items.push({
-                    description: item.data().description,
-                    title: item.data().title,
-                    user: item.data().user,
-                    type: item.data().type,
-                    id: item.data().id,
-                    severity: item.data().severity,
-                    project: item.data().project,
-                    comments: item.data().comments,
-                    value: item.data().value,
-                    label: item.data().label
-                });
-            });
-
-            setUserTickets(items);
-        })
-    }
-
-    useEffect(() => {
         getUserTickets();
-        // eslint-disable-next-line
     }, [])
-
 
     return (
         <div>

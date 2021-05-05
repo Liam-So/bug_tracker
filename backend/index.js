@@ -177,6 +177,24 @@ app.get("/tickets/:id", async (req, res) => {
   }
 });
 
+// get tickets assigned to user
+app.get("/tickets/forUser/:id", async (req, res) => {
+  try {
+    let userId = req.params.id;
+      const arrayOfProjects = await ticketRef.where("user", "==", userId).get();
+
+      const arrayOfItems = [];
+      arrayOfProjects.forEach((doc) => {
+        arrayOfItems.push(doc.data());
+      });
+      res.status(200).json(arrayOfItems);
+    } catch {
+      res.status(400).json({
+        message: "Something went wrong",
+      });
+  }
+});
+
 // get tickets for specific project
 app.get("/tickets/forProject/:id", async (req, res) => {
   try {
