@@ -9,8 +9,7 @@ import Ticket from '../interfaces/Ticket';
 import { getProjectList } from '../services/projectServices';
 import { getTicketListForUser } from '../services/ticketServices';
 
-const Home = () => {
-    
+const Home = () => {    
     const [userProjects, setUserProjects] = React.useState<Project[]>();
     const [userTickets, setUserTickets] = React.useState<Ticket[]>();
 

@@ -6,6 +6,7 @@ import Register from "../pages/auth/Register";
 import ResetPasswordPage from "../pages/auth/Reset";
 import Home from "../pages/Home";
 import Projects from "../pages/Projects";
+import Ticket from "../pages/Ticket";
 
 const routes: Route[] = [
     {
@@ -62,6 +63,20 @@ const routes: Route[] = [
         exact: true,
         component: Projects,
         name: 'Projects Page',
+        protected: true
+    },
+    {
+        path: '/tickets/',
+        exact: true,
+        component: Ticket,
+        name: 'Tickets Page',
+        protected: true
+    },
+    {
+        path: '/tickets/:id',
+        exact: true,
+        component: Ticket,
+        name: 'Tickets Page',
         protected: true
     },
 ];

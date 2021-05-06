@@ -2,39 +2,40 @@ import Project from "../../interfaces/Project";
 import * as React from "react";
 import { getTicketsForProject } from "../../services/ticketServices";
 import Ticket from "../../interfaces/Ticket";
-type projectViewProp = {
-  project: Project | undefined;
-};
 
-const ProjectView = (props: projectViewProp) => {
+const ProjectView = ({ project } : { project: Project | undefined }) => {
+  console.log(project)
   const [tickets, setTickets] = React.useState<Ticket[]>([]);
-  const projectId = props.project?.id;
 
   React.useEffect(() => {
+    console.log("Im in the useEffect hook")
+    console.log(project?.id)
+
     const getTickets = async () => {
-      const res = await getTicketsForProject(String(projectId));
+      const res = await getTicketsForProject(String(project?.id));
       console.log(res.data);
       setTickets(res.data);
     };
 
     getTickets();
     console.log(tickets);
-  }, [tickets, projectId]);
+    // eslint-disable-next-line
+  }, [project?.id]);
 
   const getStatus = () => {
-    if (props.project && props.project.status === "in_progress") {
+    if (project && project.status === "in_progress") {
       return (
         <span className="bg-purple-200 text-purple-600 py-1 px-3 rounded-full text-xs">
           Active
         </span>
       );
-    } else if (props.project && props.project.status === "completed") {
+    } else if (project && project.status === "completed") {
       return (
         <span className="bg-green-200 text-green-600 py-1 px-3 rounded-full text-xs">
           Completed
         </span>
       );
-    } else if (props.project && props.project.status === "pending") {
+    } else if (project && project.status === "pending") {
       return (
         <span className="bg-yellow-200 text-yellow-600 py-2 px-4 rounded-full text-s">
           Pending
@@ -50,10 +51,10 @@ const ProjectView = (props: projectViewProp) => {
           <div className="flex flex-wrap w-full mb-20 flex-col items-center text-center">
             <h1 className=" title-font mb-2 text-3xl font-extrabold leading-10 tracking-tight text-left sm:text-5xl sm:leading-none md:text-6xl text-gray-600">
               {" "}
-              {props.project?.name}
+              {project?.name}
             </h1>
             <p className="lg:w-1/2 w-full leading-relaxed text-base text-xl text-gray-600 pb-4">
-              {props.project?.description} 
+              {project?.description} 
             </p>
             <p className="lg:w-1/2 w-full leading-relaxed text-base text-xl text-gray-600 pb-4">
                 Click <span className="text-red-400 cursor-pointer">here</span> to change the status.
@@ -76,7 +77,7 @@ const ProjectView = (props: projectViewProp) => {
                     <p className="leading-relaxed text-sm text-justify">
                       You have{" "}
                       <span className="text-green-500">
-                        {props.project?.num_bugs.length}
+                        {project?.num_bugs.length}
                       </span>{" "}
                       for this project.
                     </p>

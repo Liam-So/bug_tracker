@@ -200,7 +200,9 @@ app.get("/tickets/forProject/:id", async (req, res) => {
   try {
     let projectId = req.params.id;
 
+    console.log("The project id is --> " + projectId)
     const arrayOfTickets = await ticketRef.where('project', '==', projectId).get();
+
 
     const resArray = [];
 
@@ -208,6 +210,7 @@ app.get("/tickets/forProject/:id", async (req, res) => {
       resArray.push(ticket.data());
     });
 
+    console.log(resArray)
     res.status(200).send(resArray); 
   } catch {
     res.status(400).send({

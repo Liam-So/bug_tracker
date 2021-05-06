@@ -7,18 +7,18 @@ import Project from '../interfaces/Project'
 import { auth } from '../config/firebase'
 import ProjectView from '../components/ProjectsTable/ProjectView'
 
-const Projects = (props: RouteComponentProps<any>) => {
-    
+const Projects = (props: RouteComponentProps<any>) => {    
     const [uniqueProject, setUniqueProject] = React.useState<Project>();
     const [listOfProjects, setListOfProjects] = React.useState<Project[]>([]);
+
+    let id = props.match.params.id;
+    let userId = auth.currentUser?.uid;
     
     React.useEffect(() => {
-        let id = props.match.params.id;
-        let userId = auth.currentUser?.uid;
-
         if (id) {
 
             const getProjectDetails = async () => {
+                console.log(id)
                 const res = await getProjectById(id);
                 setUniqueProject(res);
             }
@@ -37,7 +37,8 @@ const Projects = (props: RouteComponentProps<any>) => {
             getAllProjects();
             console.log(listOfProjects)
         }
-    }, [listOfProjects, props.match.params.id, uniqueProject]);
+        console.log(uniqueProject)
+    }, []);
 
     return (
         <div>

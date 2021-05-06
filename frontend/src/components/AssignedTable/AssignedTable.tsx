@@ -1,7 +1,22 @@
 import Ticket from "../../interfaces/Ticket";
 import AssignedTableItem from "./AssignedTableItem";
 
+
 const AssignedTable = ({ tickets }: { tickets: Ticket[] | undefined }) => {
+
+    const mockTicket: Ticket = {
+        description: 'This is a test',
+        id: 'hjkfsdf90',
+        title: 'Dynamic routes',
+        type: 'new_feature',
+        user: 'QU4QeTorrKgqq2OSh91fwBMtp643',
+        severity: 'string',
+        project: 'fdsf789',
+        comments: [],
+        value: 'Dynamic routes',
+        label: 'Dynamic routes'
+    }
+
   return (
         <div className="w-full md:w-6/12 items-center p-8">
                 <div className="mb-4 mx-0 sm:ml-4 xl:mr-4">
@@ -13,11 +28,12 @@ const AssignedTable = ({ tickets }: { tickets: Ticket[] | undefined }) => {
                             </span>
                         </p>
                         <ul>
-                            {tickets ? tickets.map((e, index) => {
+                        <AssignedTableItem item={mockTicket} num={5}/>
+                            {/* {tickets ? tickets.map((e, index) => {
                             return (
                                 <AssignedTableItem item={e} key={index} num={index} />
                             )
-                            }): (<></>)}
+                            }): (<></>)} */}
                         </ul>
                     </div>
                 </div>
