@@ -70,23 +70,25 @@ app.get("/users/:id", async (req, res) => {
   }
 });
 
-// get all projects that are assigned to a user
-app.get("/projects/forUser/:id", async (req, res) => {
+// get all projects
+app.get("/projects", async (req, res) => {
   try {
-    let userId = req.params.id;
-    const arrayOfProjects = await projectRef.where("team", "array-contains", userId).get();
+    const snapshot = await projectRef.get();
 
     const arrayOfItems = [];
-    arrayOfProjects.forEach((doc) => {
+
+    snapshot.forEach(doc => {
       arrayOfItems.push(doc.data());
     });
-    res.status(200).json(arrayOfItems);
+
+    res.status(200).send(arrayOfItems);
   } catch {
-    res.status(400).json({
-      message: "Something went wrong",
-    });
+    res.status(400).send({
+      message: "Something went wrong"
+    })
   }
-});
+})
+
 
 // get specific project
 app.get("/projects/:id", async (req, res) => {
@@ -124,6 +126,46 @@ app.post("/projects", async (req, res) => {
     }
   });
 
+  // update a project
+  app.put("/projects/update", async(req, res) => {
+    try {
+      await projectRef.doc(req.body.id).update({
+        name: req.body.name,
+        value: req.body.name,
+        label: req.body.name,
+        status: req.body.status,
+        team: req.body.team,
+        description: req.body.description
+      });
+
+      res.status(200).send({
+        message: "Successfully sent"
+      });
+    } catch {
+      res.status(400).send({
+        message: "Something went wrong"
+      });
+    }
+  });
+
+  // get all projects that are assigned to a user
+  app.get("/projects/forUser/:id", async (req, res) => {
+    try {
+      let userId = req.params.id;
+      const arrayOfProjects = await projectRef.where("team", "array-contains", userId).get();
+
+      const arrayOfItems = [];
+      arrayOfProjects.forEach((doc) => {
+        arrayOfItems.push(doc.data());
+      });
+      res.status(200).json(arrayOfItems);
+    } catch {
+      res.status(400).json({
+        message: "Something went wrong",
+      });
+    }
+  });
+
 // get tickets
 app.get("/tickets", async (req, res) => {
   try {
@@ -152,6 +194,44 @@ app.get("/tickets/:id", async (req, res) => {
     });
   }
 });
+
+// get tickets assigned to user
+app.get("/tickets/forUser/:id", async (req, res) => {
+  try {
+    let userId = req.params.id;
+      const arrayOfProjects = await ticketRef.where("user", "==", userId).get();
+
+      const arrayOfItems = [];
+      arrayOfProjects.forEach((doc) => {
+        arrayOfItems.push(doc.data());
+      });
+      res.status(200).json(arrayOfItems);
+    } catch {
+      res.status(400).json({
+        message: "Something went wrong",
+      });
+  }
+});
+
+// get tickets for specific project
+app.get("/tickets/forProject/:id", async (req, res) => {
+  try {
+    let projectId = req.params.id;
+    const arrayOfTickets = await ticketRef.where('project', '==', projectId).get();
+
+    const resArray = [];
+
+    arrayOfTickets.forEach(ticket => {
+      resArray.push(ticket.data());
+    });
+
+    res.status(200).send(resArray); 
+  } catch {
+    res.status(400).send({
+      message: "Something went wrong"
+    });
+  }
+})
 
 // send a new ticket
 app.post("/tickets", async (req, res) => {

@@ -7,4 +7,5 @@ export default interface User {
   title: string;
   userDesc: string;
   userId: string;
+  // projects: string[];
 }

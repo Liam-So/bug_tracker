@@ -5,7 +5,11 @@ import Ticket from "../interfaces/Ticket"
 const TICKET_URL = `${API_URL}/tickets`;
 
 export const getTicketListForUser = async (userId: string) => {
-    return await axios.get(`${TICKET_URL}/${userId}`);
+    return await axios.get(`${TICKET_URL}/forUser/${userId}`);
+}
+
+export const getTicketsForProject = async (projectId: string) => {
+    return await axios.get(`${TICKET_URL}/forProject/${projectId}`);
 }
 
 export const sendTicket = async (ticket: Ticket) => {
