@@ -7,7 +7,6 @@ import { getUserList } from "../../services/userServices";
 import Select from "react-select";
 import { status_codes, getDefaultStatusCode } from "../../interfaces/constants"
 import { updateProject } from "../../services/projectServices";
-import { auth } from "../../config/firebase";
 import { getUserIdsFromArray } from "../../services";
 
 const ProjectView = ({ project }: { project: Project | undefined }) => {
@@ -22,7 +21,6 @@ const ProjectView = ({ project }: { project: Project | undefined }) => {
 
   const [finalProject, setFinalProject] = React.useState<Project | undefined>();
 
-  {console.log(auth.currentUser?.uid)}
   React.useEffect(() => {
     console.log("Im in the useEffect hook");
     console.log(project?.id);

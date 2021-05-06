@@ -38,6 +38,7 @@ const Projects = (props: RouteComponentProps<any>) => {
             console.log(listOfProjects)
         }
         console.log(uniqueProject)
+        // eslint-disable-next-line
     }, []);
 
     return (
