@@ -4,15 +4,21 @@ import { getTicketsForProject } from "../../services/ticketServices";
 import Ticket from "../../interfaces/Ticket";
 import User from "../../interfaces/User";
 import { getUserList } from "../../services/userServices";
+import Select from "react-select";
 
-const ProjectView = ({ project } : { project: Project | undefined }) => {
-  console.log(project)
+const ProjectView = ({ project }: { project: Project | undefined }) => {
+  console.log(project);
   const [tickets, setTickets] = React.useState<Ticket[]>([]);
   const [userList, setUserList] = React.useState<User[]>([]);
+  const [statusModal, setStatusModal] = React.useState(false);
+  const [projectName, setProjectName] = React.useState(project?.name);
+  const [listOfUsers, setListOfUsers] = React.useState<any>([]);
+  const [description, setDescription] = React.useState(project?.description);
+
 
   React.useEffect(() => {
-    console.log("Im in the useEffect hook")
-    console.log(project?.id)
+    console.log("Im in the useEffect hook");
+    console.log(project?.id);
 
     const getTickets = async () => {
       const res = await getTicketsForProject(String(project?.id));
@@ -21,18 +27,28 @@ const ProjectView = ({ project } : { project: Project | undefined }) => {
     };
 
     const getListOfUsers = async () => {
-      const filteredListOfUsers: User[] = [];
       const res = await getUserList();
 
-      setUserList(res);
-    }
+      const filteredArrayOfUsers = [];
+      for (let item of res) {
+        if (project?.team.includes(item.userId)) {
+          filteredArrayOfUsers.push(item);
+        }
+      }
 
+      setUserList(res);
+      setListOfUsers(filteredArrayOfUsers);
+    };
+
+    // In the event that project changes, we rerun everything
     getTickets();
     getListOfUsers();
+    setProjectName(project?.name);
+    setDescription(project?.description);
     console.log(tickets);
-    console.log(userList)
+    console.log(userList);
     // eslint-disable-next-line
-  }, [project?.id]);
+  }, [project?.id, project]);
 
   const getStatus = () => {
     if (project && project.status === "in_progress") {
@@ -56,12 +72,9 @@ const ProjectView = ({ project } : { project: Project | undefined }) => {
     }
   };
 
-  const getFilteredListOfUsers = () => {
-    const filteredUsers: User[] = userList.filter(user => project?.team.includes(user.userId));
-    return filteredUsers;
-  }
-
-  
+  console.log(projectName)
+  console.log(listOfUsers)
+  console.log(description)
 
   return (
     <div>
@@ -73,11 +86,127 @@ const ProjectView = ({ project } : { project: Project | undefined }) => {
               {project?.name}
             </h1>
             <p className="lg:w-1/2 w-full leading-relaxed text-base text-xl text-gray-600 pb-4">
-              {project?.description} 
+              {project?.description}
             </p>
-            <p className="lg:w-1/2 w-full leading-relaxed text-base text-xl text-gray-600 pb-4">
-                Click <span className="text-red-400 cursor-pointer">here</span> to change the status.
-            </p>
+            <div className="lg:w-1/2 w-full leading-relaxed text-base text-xl text-gray-600 pb-4">
+              Click{" "}
+              <button
+                className="text-red-400 cursor-pointer"
+                onClick={() => setStatusModal(true)}
+              >
+                here
+              </button>{" "}
+              to change the status.
+              {statusModal === true ? (
+                <div className="justify-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
+                  <div className="h-full flex flex-col justify-center sm:py-12">
+                    <div className="relative py-3 sm:max-w-xl sm:mx-auto">
+                      <div className="relative px-4 py-10 bg-white mx-8 md:mx-0 shadow rounded-3xl sm:p-10">
+                        <div className="max-w-md mx-auto">
+                          <div className="flex items-center space-x-5">
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              className="h-14 w-14"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M11 4a2 2 0 114 0v1a1 1 0 001 1h3a1 1 0 011 1v3a1 1 0 01-1 1h-1a2 2 0 100 4h1a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-1a2 2 0 10-4 0v1a1 1 0 01-1 1H7a1 1 0 01-1-1v-3a1 1 0 00-1-1H4a2 2 0 110-4h1a1 1 0 001-1V7a1 1 0 011-1h3a1 1 0 001-1V4z"
+                              />
+                            </svg>
+                            <div className="block pl-2 font-semibold text-xl self-start text-gray-700 text-left">
+                              <h2 className="leading-relaxed">
+                                Update your Project
+                              </h2>
+                              <p className="text-sm text-gray-500 font-normal leading-relaxed">
+                                Provide details of the Project you want to
+                                update.
+                              </p>
+                            </div>
+                          </div>
+                          <div className="divide-y divide-gray-200">
+                            <div className="py-8 text-base leading-6 space-y-4 text-gray-700 sm:text-lg sm:leading-7 text-left">
+                              <div className="flex flex-col">
+                                <label className="leading-loose">
+                                  Project Name
+                                </label>
+                                <input
+                                  type="text"
+                                  className="px-4 py-2 border focus:ring-gray-500 focus:border-gray-900 w-full sm:text-sm border-gray-300 rounded-md focus:outline-none text-gray-600 h-8"
+                                  placeholder="Project Name"
+                                  value={project?.name}
+                                  onChange={(e) => setProjectName(e.target.value)}
+                                />
+                              </div>
+
+                              <Select
+                                closeMenuOnSelect={false}
+                                isMulti
+                                options={userList}
+                                placeholder="Add Team Members"
+                                defaultValue={listOfUsers}
+                                onChange={(e) => {
+                                  setListOfUsers(e);
+                                }}
+                              />
+
+                              <label className="block">
+                                <span className="text-gray-700">
+                                  Description
+                                </span>
+                                <textarea
+                                  className="form-textarea mt-1 block w-full border focus:ring-gray-500 focus:border-gray-900 w-full border-gray-300 rounded-md focus:outline-none text-gray-600 text-sm p-2"
+                                  placeholder=" Write a description for the Project."
+                                  rows={5}
+                                  onChange={(e) => setDescription(e.target.value)}
+                                  defaultValue={project?.description}
+                                />
+                              </label>
+                            </div>
+                            <div className="pt-4 flex items-center space-x-4">
+                              <button
+                                className="flex justify-center items-center w-full text-gray-900 px-4 py-3 rounded-md focus:outline-none"
+                                onClick={() => setStatusModal(false)}
+                              >
+                                <svg
+                                  className="w-6 h-6 mr-3"
+                                  fill="none"
+                                  stroke="currentColor"
+                                  viewBox="0 0 24 24"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                >
+                                  <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth="2"
+                                    d="M6 18L18 6M6 6l12 12"
+                                  ></path>
+                                </svg>{" "}
+                                Cancel
+                              </button>
+                              <button
+                                className="bg-blue-500 flex justify-center items-center w-full text-white px-4 py-3 rounded-md focus:outline-none"
+                                onClick={() => {
+                                  setStatusModal(false);
+                                }}
+                              >
+                                Update
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <></>
+              )}
+            </div>
             {getStatus()}
             <div className="flex mt-6 justify-center">
               <div className="w-16 h-1 rounded-full bg-indigo-500 inline-flex"></div>
@@ -143,20 +272,21 @@ const ProjectView = ({ project } : { project: Project | undefined }) => {
               <div className="pattern-dots-md gray-light">
                 <div className="rounded bg-gray-100 p-4">
                   <div className="flex-grow text-gray-800">
-                    <h2 className=" text-xl title-font font-medium mb-3">
+                    <h2 className=" text-xl title-font font-medium">
                       Team Members
                     </h2>
-                    <p className="leading-relaxed text-sm text-justify">
-                      Click <span className="text-red-400">here</span> to edit
-                      the team.
-                    </p>
                     <ul className="pt-4">
-                      {getFilteredListOfUsers().map((item, key) => {
+                      {listOfUsers.map((item: any, index: number) => {
                         return (
-                          <li className="flex flex-col pb-2">
-                            <span className="text-lg font-semibold">{item.name}</span> <span className="text-green-400 text-base">{item.email}</span>
+                          <li className="flex flex-col pb-2" key={index}>
+                            <span className="text-lg font-semibold">
+                              {item.name}
+                            </span>{" "}
+                            <span className="text-green-400 text-base">
+                              {item.email}
+                            </span>
                           </li>
-                        )
+                        );
                       })}
                     </ul>
                   </div>
