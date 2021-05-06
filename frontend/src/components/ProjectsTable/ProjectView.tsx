@@ -2,10 +2,13 @@ import Project from "../../interfaces/Project";
 import * as React from "react";
 import { getTicketsForProject } from "../../services/ticketServices";
 import Ticket from "../../interfaces/Ticket";
+import User from "../../interfaces/User";
+import { getUserList } from "../../services/userServices";
 
 const ProjectView = ({ project } : { project: Project | undefined }) => {
   console.log(project)
   const [tickets, setTickets] = React.useState<Ticket[]>([]);
+  const [userList, setUserList] = React.useState<User[]>([]);
 
   React.useEffect(() => {
     console.log("Im in the useEffect hook")
@@ -17,8 +20,17 @@ const ProjectView = ({ project } : { project: Project | undefined }) => {
       setTickets(res.data);
     };
 
+    const getListOfUsers = async () => {
+      const filteredListOfUsers: User[] = [];
+      const res = await getUserList();
+
+      setUserList(res);
+    }
+
     getTickets();
+    getListOfUsers();
     console.log(tickets);
+    console.log(userList)
     // eslint-disable-next-line
   }, [project?.id]);
 
@@ -43,6 +55,13 @@ const ProjectView = ({ project } : { project: Project | undefined }) => {
       );
     }
   };
+
+  const getFilteredListOfUsers = () => {
+    const filteredUsers: User[] = userList.filter(user => project?.team.includes(user.userId));
+    return filteredUsers;
+  }
+
+  
 
   return (
     <div>
@@ -128,9 +147,18 @@ const ProjectView = ({ project } : { project: Project | undefined }) => {
                       Team Members
                     </h2>
                     <p className="leading-relaxed text-sm text-justify">
-                      Click <span className="text-red-400">here</span> to change
-                      the status.
+                      Click <span className="text-red-400">here</span> to edit
+                      the team.
                     </p>
+                    <ul className="pt-4">
+                      {getFilteredListOfUsers().map((item, key) => {
+                        return (
+                          <li className="flex flex-col pb-2">
+                            <span className="text-lg font-semibold">{item.name}</span> <span className="text-green-400 text-base">{item.email}</span>
+                          </li>
+                        )
+                      })}
+                    </ul>
                   </div>
                 </div>
               </div>

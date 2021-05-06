@@ -5,6 +5,5 @@ const USER_URL = `${API_URL}/users`;
 
 export const getUserList = async () => {
     const res = await axios.get(`${USER_URL}`);
-
     return res.data;
 } 
