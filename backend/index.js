@@ -70,10 +70,6 @@ app.get("/users/:id", async (req, res) => {
   }
 });
 
-// get all users for a specific project
-// app.get("/users/forProject/:id", async (req, res) => {
-// });
-
 // get all projects
 app.get("/projects", async (req, res) => {
   try {
@@ -126,6 +122,28 @@ app.post("/projects", async (req, res) => {
     } catch {
       res.status(400).send({
         message: "Something went wrong",
+      });
+    }
+  });
+
+  // update a project
+  app.put("/projects/update", async(req, res) => {
+    try {
+      await projectRef.doc(req.body.id).update({
+        name: req.body.name,
+        value: req.body.name,
+        label: req.body.name,
+        status: req.body.status,
+        team: req.body.team,
+        description: req.body.description
+      });
+
+      res.status(200).send({
+        message: "Successfully sent"
+      });
+    } catch {
+      res.status(400).send({
+        message: "Something went wrong"
       });
     }
   });

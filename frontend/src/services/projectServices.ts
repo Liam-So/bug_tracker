@@ -20,3 +20,9 @@ export const getProjectById = async (projectId: string) => {
 export const sendProject = async (project: Project) => {
     return await axios.post(`${PROJECT_URL}`, project);
 } 
+
+// Update a project to DB
+export const updateProject = async (project: Project) => {
+    console.log(project)
+    return await axios.put(`${PROJECT_URL}/update`, project);
+}

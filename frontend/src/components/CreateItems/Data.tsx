@@ -9,4 +9,3 @@ export const ticketSeverityArray = [
     { value: 'md', label: 'Medium 😅' },
     { value: 'low', label: 'Low ☕' }
 ];
-

@@ -5,17 +5,24 @@ import Ticket from "../../interfaces/Ticket";
 import User from "../../interfaces/User";
 import { getUserList } from "../../services/userServices";
 import Select from "react-select";
+import { status_codes, getDefaultStatusCode } from "../../interfaces/constants"
+import { updateProject } from "../../services/projectServices";
+import { auth } from "../../config/firebase";
+import { getUserIdsFromArray } from "../../services";
 
 const ProjectView = ({ project }: { project: Project | undefined }) => {
-  console.log(project);
+
   const [tickets, setTickets] = React.useState<Ticket[]>([]);
   const [userList, setUserList] = React.useState<User[]>([]);
   const [statusModal, setStatusModal] = React.useState(false);
   const [projectName, setProjectName] = React.useState(project?.name);
   const [listOfUsers, setListOfUsers] = React.useState<any>([]);
   const [description, setDescription] = React.useState(project?.description);
+  const [status, setStatus] = React.useState<any>(project?.status);
 
+  const [finalProject, setFinalProject] = React.useState<Project | undefined>();
 
+  {console.log(auth.currentUser?.uid)}
   React.useEffect(() => {
     console.log("Im in the useEffect hook");
     console.log(project?.id);
@@ -45,6 +52,8 @@ const ProjectView = ({ project }: { project: Project | undefined }) => {
     getListOfUsers();
     setProjectName(project?.name);
     setDescription(project?.description);
+    setStatus(project?.status);
+    setFinalProject(project);
     console.log(tickets);
     console.log(userList);
     // eslint-disable-next-line
@@ -72,9 +81,22 @@ const ProjectView = ({ project }: { project: Project | undefined }) => {
     }
   };
 
+  const projectObject: Project = {
+    description: String(description),
+    id: String(finalProject?.id),
+    num_bugs: [], // put an empty array because we won't be updating that here
+    status: status,
+    team: getUserIdsFromArray(listOfUsers),
+    name: String(projectName),
+    value: String(projectName),
+    label: String(projectName)
+  };
+
   console.log(projectName)
   console.log(listOfUsers)
   console.log(description)
+  console.log(finalProject)
+  console.log(status)
 
   return (
     <div>
@@ -138,10 +160,22 @@ const ProjectView = ({ project }: { project: Project | undefined }) => {
                                   type="text"
                                   className="px-4 py-2 border focus:ring-gray-500 focus:border-gray-900 w-full sm:text-sm border-gray-300 rounded-md focus:outline-none text-gray-600 h-8"
                                   placeholder="Project Name"
-                                  value={project?.name}
+                                  value={projectName}
                                   onChange={(e) => setProjectName(e.target.value)}
                                 />
                               </div>
+
+                              <Select
+                                closeMenuOnSelect={false}
+                                options={status_codes}
+                                placeholder="Update Project Status"
+                                defaultValue={status_codes[getDefaultStatusCode(status)]}
+                                onChange={(e) => {
+                                  if (e !== null) {
+                                    setStatus(e.value);
+                                  }
+                                }}
+                              />
 
                               <Select
                                 closeMenuOnSelect={false}
@@ -163,7 +197,7 @@ const ProjectView = ({ project }: { project: Project | undefined }) => {
                                   placeholder=" Write a description for the Project."
                                   rows={5}
                                   onChange={(e) => setDescription(e.target.value)}
-                                  defaultValue={project?.description}
+                                  defaultValue={description}
                                 />
                               </label>
                             </div>
@@ -192,6 +226,7 @@ const ProjectView = ({ project }: { project: Project | undefined }) => {
                                 className="bg-blue-500 flex justify-center items-center w-full text-white px-4 py-3 rounded-md focus:outline-none"
                                 onClick={() => {
                                   setStatusModal(false);
+                                  updateProject(projectObject);
                                 }}
                               >
                                 Update
