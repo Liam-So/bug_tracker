@@ -7,15 +7,12 @@ const AssignedTableItem = ({ item, num }: { item: Ticket, num: number }) => {
     const sendToUniqueTicket = () => {
         return history.push(`/tickets/${item.id}`);
     }
-
     
     return (
             <li className="flex items-center text-gray-600 dark:text-gray-200 justify-between py-3 border-b-2 border-gray-100 dark:border-gray-800 hover:bg-gray-100" onClick={() => sendToUniqueTicket()}>
                 <div className="flex items-center justify-start text-sm">
-                    {/* <span className="mx-4">{num + 1}</span> */}
-                    <span className="mx-4">1</span>
-                    {/* <span>{item.title}</span> */}
-                    <span>Integrarte dynamic routes</span>
+                    <span className="mx-4">{num + 1}</span>
+                    <span>{item.title}</span>
                 </div>
                 <svg
                     width="20"

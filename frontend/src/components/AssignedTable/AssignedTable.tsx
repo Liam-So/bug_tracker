@@ -28,12 +28,11 @@ const AssignedTable = ({ tickets }: { tickets: Ticket[] | undefined }) => {
                             </span>
                         </p>
                         <ul>
-                        <AssignedTableItem item={mockTicket} num={5}/>
-                            {/* {tickets ? tickets.map((e, index) => {
+                            {tickets ? tickets.map((e, index) => {
                             return (
                                 <AssignedTableItem item={e} key={index} num={index} />
                             )
-                            }): (<></>)} */}
+                            }): (<></>)}
                         </ul>
                     </div>
                 </div>
