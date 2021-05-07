@@ -22,9 +22,6 @@ const ProjectView = ({ project }: { project: Project | undefined }) => {
   const [finalProject, setFinalProject] = React.useState<Project | undefined>();
 
   React.useEffect(() => {
-    console.log("Im in the useEffect hook");
-    console.log(project?.id);
-
     const getTickets = async () => {
       const res = await getTicketsForProject(String(project?.id));
       console.log(res.data);
@@ -52,8 +49,6 @@ const ProjectView = ({ project }: { project: Project | undefined }) => {
     setDescription(project?.description);
     setStatus(project?.status);
     setFinalProject(project);
-    console.log(tickets);
-    console.log(userList);
     // eslint-disable-next-line
   }, [project?.id, project]);
 
@@ -89,13 +84,7 @@ const ProjectView = ({ project }: { project: Project | undefined }) => {
     value: String(projectName),
     label: String(projectName)
   };
-
-  console.log(projectName)
-  console.log(listOfUsers)
-  console.log(description)
-  console.log(finalProject)
-  console.log(status)
-
+  
   return (
     <div>
       <section className=" text-gray-200">
@@ -111,12 +100,12 @@ const ProjectView = ({ project }: { project: Project | undefined }) => {
             <div className="lg:w-1/2 w-full leading-relaxed text-base text-xl text-gray-600 pb-4">
               Click{" "}
               <button
-                className="text-red-400 cursor-pointer"
+                className="bg-red-300 rounded-md px-2 cursor-pointer"
                 onClick={() => setStatusModal(true)}
               >
                 here
               </button>{" "}
-              to change the status.
+              to edit the Project.
               {statusModal === true ? (
                 <div className="justify-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
                   <div className="h-full flex flex-col justify-center sm:py-12">

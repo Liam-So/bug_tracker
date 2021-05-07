@@ -8,6 +8,10 @@ export const getTicketListForUser = async (userId: string) => {
     return await axios.get(`${TICKET_URL}/forUser/${userId}`);
 }
 
+export const getTicketById = async (ticketId: string) => {
+    return await axios.get(`${TICKET_URL}/${ticketId}`);
+}
+
 export const getTicketsForProject = async (projectId: string) => {
     return await axios.get(`${TICKET_URL}/forProject/${projectId}`);
 }
