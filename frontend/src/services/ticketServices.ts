@@ -25,3 +25,7 @@ export const sendTicket = async (ticket: Ticket) => {
 export const updateComments = async (comment: Comment) => {
     return await axios.put(`${TICKET_URL}/updateComments`, comment);
 }
+
+export const updateTicket = async (ticket: Ticket) => {
+    return await axios.put(`${TICKET_URL}/update`, ticket);
+}

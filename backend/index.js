@@ -264,6 +264,32 @@ app.post("/tickets", async (req, res) => {
   }
 });
 
+// update ticket
+app.put("/tickets/update", async(req, res) => {
+  console.log(req.body);
+
+  try {
+    await ticketRef.doc(req.body.id).update({
+      title: req.body.title,
+      value: req.body.title,
+      label: req.body.title,
+      project: req.body.project,
+      user: req.body.user,
+      type: req.body.type,
+      severity: req.body.severity,
+      description: req.body.description
+    });
+
+    res.status(200).send({
+      message: "Successfully updated"
+    });
+  } catch {
+    res.status(400).send({
+      message: "Something went wrong"
+    });
+  }
+})
+
 // update comments in a ticket
 app.put("/tickets/updateComments", async (req, res) => {
   try {
