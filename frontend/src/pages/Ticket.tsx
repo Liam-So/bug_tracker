@@ -5,6 +5,7 @@ import Ticket from "../interfaces/Ticket";
 import { auth } from "../config/firebase";
 import { getTicketById, getTicketListForUser } from "../services/ticketServices";
 import TicketView from "../components/TicketsTable/TicketView";
+import AssignedTable from "../components/AssignedTable/AssignedTable";
 
 const TicketPage = (props: RouteComponentProps<any>) => {
   const [ticket, setTicket] = React.useState<Ticket>();
@@ -51,7 +52,7 @@ const TicketPage = (props: RouteComponentProps<any>) => {
       <Navbar />
       {tickets !== null ? (
         <div className="bg-green-200">
-        All tickets
+          <AssignedTable tickets={tickets} />
       </div>
       ): (
           <TicketView ticket={ticket} />

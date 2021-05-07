@@ -6,10 +6,11 @@ import { getProjectById, getProjectList } from '../services/projectServices'
 import Project from '../interfaces/Project'
 import { auth } from '../config/firebase'
 import ProjectView from '../components/ProjectsTable/ProjectView'
+import HomeTable from '../components/HomeTable/HomeTable'
 
 const Projects = (props: RouteComponentProps<any>) => {    
     const [uniqueProject, setUniqueProject] = React.useState<Project>();
-    const [listOfProjects, setListOfProjects] = React.useState<Project[]>([]);
+    const [listOfProjects, setListOfProjects] = React.useState<Project[] | null>(null);
 
     let id = props.match.params.id;
     let userId = auth.currentUser?.uid;
@@ -44,12 +45,14 @@ const Projects = (props: RouteComponentProps<any>) => {
     return (
         <div>
             <Navbar />
-            {listOfProjects.length > 0 ? (
-                <ProjectsTable />
+            {listOfProjects !== null ? (
+                // <ProjectsTable />
+                <div className="flex justify-center">
+                    <HomeTable projects={listOfProjects}/>
+                </div>
+
             ) : (
-                <>
                 <ProjectView project={uniqueProject}/>
-                </>
             )}
         </div>
     )

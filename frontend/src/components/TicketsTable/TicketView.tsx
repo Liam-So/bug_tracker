@@ -1,15 +1,23 @@
 import * as React from "react";
 import { auth } from "../../config/firebase";
 import Ticket from "../../interfaces/Ticket";
-import { getTicketById, updateComments, updateTicket } from "../../services/ticketServices";
+import {
+  getTicketById,
+  updateComments,
+  updateTicket,
+} from "../../services/ticketServices";
 import Comment from "../../interfaces/Comment";
 import User from "../../interfaces/User";
 import { getUserList } from "../../services/userServices";
 import { getProjectList } from "../../services/projectServices";
 import Project from "../../interfaces/Project";
 import Select from "react-select";
-import { ticketTypeArray, ticketSeverityArray, getDefaultTicketType, getDefaultTicketSeverity } from "../../interfaces/constants";
-
+import {
+  ticketTypeArray,
+  ticketSeverityArray,
+  getDefaultTicketType,
+  getDefaultTicketSeverity,
+} from "../../interfaces/constants";
 
 const TicketView = ({ ticket }: { ticket: Ticket | undefined }) => {
   // general view states
@@ -21,22 +29,27 @@ const TicketView = ({ ticket }: { ticket: Ticket | undefined }) => {
   const [users, setUsers] = React.useState<User[]>([]);
   const [projects, setProjects] = React.useState<Project[]>([]);
 
-
   // Modal and form states
   const [showModal, setShowModal] = React.useState(false);
   const [ticketName, setTicketName] = React.useState(ticket?.title);
-  const [assignedProject, setAssignedProject] = React.useState<any>(ticket?.project);
+  const [assignedProject, setAssignedProject] = React.useState<any>(
+    ticket?.project
+  );
   const [assignedDev, setAssignedDev] = React.useState<any>(ticket?.user);
   const [assignedType, setAssignedType] = React.useState<any>(ticket?.type);
-  const [assignedSeverity, setAssignedSeverity] = React.useState<any>(ticket?.severity);
-  const [updatedDescription, setUpdatedDescription] = React.useState(ticket?.description);
+  const [assignedSeverity, setAssignedSeverity] = React.useState<any>(
+    ticket?.severity
+  );
+  const [updatedDescription, setUpdatedDescription] = React.useState(
+    ticket?.description
+  );
 
   React.useEffect(() => {
     const getTicketDetails = async () => {
       console.log("Im in the hook");
 
       // fetch comments again and send it
-      console.log(ticket?.id)
+      console.log(ticket?.id);
       const res = await getTicketById(String(ticket?.id));
       console.log(res);
       setFinalTicket(res.data);
@@ -82,14 +95,14 @@ const TicketView = ({ ticket }: { ticket: Ticket | undefined }) => {
 
   const getAssignedUser = (id: string) => {
     let returnUser: User = {
-      value: '',
-      label: '',
-      user: '',
-      email: '',
-      name: '',
-      title: '',
-      userDesc: '',
-      userId: ''
+      value: "",
+      label: "",
+      user: "",
+      email: "",
+      name: "",
+      title: "",
+      userDesc: "",
+      userId: "",
     };
 
     users.forEach((user) => {
@@ -98,18 +111,18 @@ const TicketView = ({ ticket }: { ticket: Ticket | undefined }) => {
       }
     });
     return returnUser;
-  }
+  };
 
   const getAssignedProject = (id: string) => {
     let returnProject: Project = {
-      description: '',
-      id: '',
+      description: "",
+      id: "",
       num_bugs: [],
-      status: '',
+      status: "",
       team: [],
-      name: '',
-      value: '',
-      label: ''
+      name: "",
+      value: "",
+      label: "",
     };
     projects.forEach((project) => {
       if (project.id === id) {
@@ -117,7 +130,7 @@ const TicketView = ({ ticket }: { ticket: Ticket | undefined }) => {
       }
     });
     return returnProject;
-  }
+  };
 
   const ticketToSend: Ticket = {
     description: String(updatedDescription),
@@ -125,18 +138,18 @@ const TicketView = ({ ticket }: { ticket: Ticket | undefined }) => {
     title: String(ticketName),
     type: assignedType,
     user: assignedDev,
-    severity: assignedSeverity ? assignedSeverity.value : '',
+    severity: assignedSeverity ? assignedSeverity.value : "",
     project: assignedProject,
     comments: [],
     value: String(ticketName),
-    label: String(ticketName)
-  }
+    label: String(ticketName),
+  };
 
   const handleClick = async () => {
-    console.log(ticketToSend)
+    console.log(ticketToSend);
     const res = await updateTicket(ticketToSend);
     console.log(res);
-  }
+  };
 
   return (
     <div>
@@ -186,7 +199,9 @@ const TicketView = ({ ticket }: { ticket: Ticket | undefined }) => {
                           className="px-4 py-2 border focus:ring-gray-500 focus:border-gray-900 w-full sm:text-sm border-gray-300 rounded-md focus:outline-none text-gray-600"
                           placeholder="Ticket Name"
                           value={ticketName}
-                          onChange={value => setTicketName(value.target.value)}
+                          onChange={(value) =>
+                            setTicketName(value.target.value)
+                          }
                         />
                       </div>
 
@@ -194,12 +209,14 @@ const TicketView = ({ ticket }: { ticket: Ticket | undefined }) => {
                         closeMenuOnSelect={true}
                         options={projects}
                         placeholder="Assign to Project"
-                        defaultValue={getAssignedProject(String(finalTicket?.project))}
+                        defaultValue={getAssignedProject(
+                          String(finalTicket?.project)
+                        )}
                         onChange={(value) => {
-                          console.log(value)
+                          console.log(value);
                           if (value) {
-                          setAssignedProject(value.id)
-                        }
+                            setAssignedProject(value.id);
+                          }
                         }}
                       />
 
@@ -207,12 +224,14 @@ const TicketView = ({ ticket }: { ticket: Ticket | undefined }) => {
                         closeMenuOnSelect={true}
                         options={users}
                         placeholder="Assign User"
-                        defaultValue={getAssignedUser(String(finalTicket?.user))}
-                        onChange={value => {
-                            if (value) {
-                              console.log(value.userId);
-                              setAssignedDev(value.userId);
-                          };
+                        defaultValue={getAssignedUser(
+                          String(finalTicket?.user)
+                        )}
+                        onChange={(value) => {
+                          if (value) {
+                            console.log(value.userId);
+                            setAssignedDev(value.userId);
+                          }
                         }}
                       />
 
@@ -221,7 +240,11 @@ const TicketView = ({ ticket }: { ticket: Ticket | undefined }) => {
                         options={ticketTypeArray}
                         className="font-sans"
                         placeholder="Ticket Type"
-                        defaultValue={ticketTypeArray[getDefaultTicketType(String(finalTicket?.type))]}
+                        defaultValue={
+                          ticketTypeArray[
+                            getDefaultTicketType(String(finalTicket?.type))
+                          ]
+                        }
                         onChange={(value) => {
                           setAssignedType(value?.value);
                         }}
@@ -232,7 +255,13 @@ const TicketView = ({ ticket }: { ticket: Ticket | undefined }) => {
                         options={ticketSeverityArray}
                         className="font-sans"
                         placeholder="Ticket Severity"
-                        defaultValue={ticketSeverityArray[getDefaultTicketSeverity(String(finalTicket?.severity))]}
+                        defaultValue={
+                          ticketSeverityArray[
+                            getDefaultTicketSeverity(
+                              String(finalTicket?.severity)
+                            )
+                          ]
+                        }
                         onChange={(e) => setAssignedSeverity(e)}
                       />
 
@@ -243,7 +272,9 @@ const TicketView = ({ ticket }: { ticket: Ticket | undefined }) => {
                           placeholder="Write a description for the ticket."
                           rows={5}
                           defaultValue={finalTicket?.description}
-                          onChange={(e) => setUpdatedDescription(e.target.value)}
+                          onChange={(e) =>
+                            setUpdatedDescription(e.target.value)
+                          }
                         ></textarea>
                       </label>
                     </div>
@@ -352,7 +383,9 @@ const TicketView = ({ ticket }: { ticket: Ticket | undefined }) => {
                         return (
                           <div className="flex" key={index}>
                             <div className="flex-1 border rounded-lg px-4 py-2 sm:px-6 sm:py-4 leading-relaxed">
-                              <strong>{getAssignedUser(item.userId).name}</strong>{" "}
+                              <strong>
+                                {getAssignedUser(item.userId).name}
+                              </strong>{" "}
                               <span className="text-xs text-gray-400">
                                 {item.time}
                               </span>

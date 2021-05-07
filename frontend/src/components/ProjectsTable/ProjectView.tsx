@@ -100,7 +100,7 @@ const ProjectView = ({ project }: { project: Project | undefined }) => {
             <div className="lg:w-1/2 w-full leading-relaxed text-base text-xl text-gray-600 pb-4">
               Click{" "}
               <button
-                className="bg-red-300 rounded-md px-2 cursor-pointer"
+                className="bg-red-300 rounded-md px-2 cursor-pointer animate-pulse"
                 onClick={() => setStatusModal(true)}
               >
                 here
