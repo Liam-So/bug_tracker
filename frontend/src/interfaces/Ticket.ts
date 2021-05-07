@@ -1,3 +1,5 @@
+import Comment from "./Comment"
+
 export default interface Ticket {
     description: string;
     id: string;
@@ -6,7 +8,7 @@ export default interface Ticket {
     user: string | undefined;
     severity: string;
     project: string;
-    comments: string[];
+    comments: Comment[];
     value: string;
     label: string;
 }

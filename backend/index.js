@@ -264,5 +264,29 @@ app.post("/tickets", async (req, res) => {
   }
 });
 
+// update comments in a ticket
+app.put("/tickets/updateComments", async (req, res) => {
+  try {
+    const commentObject = {
+      ticketId: req.body.ticketId,
+      userId: req.body.userId, 
+      time: `${admin.firestore.Timestamp.now().toDate().toDateString()} ${admin.firestore.Timestamp.now().toDate().toLocaleTimeString()}`,
+      message: req.body.message
+    }
+
+    await ticketRef.doc(req.body.ticketId).update({
+      comments: admin.firestore.FieldValue.arrayUnion(commentObject),
+    });
+    
+    res.status(200).send({
+      message: "Successfully sent"
+    })
+  } catch {
+    res.status(400).send({
+      message: "Something went wrong"
+    })
+  }
+})
+
 // listener
 app.listen(port, () => console.log(`listening on localhost: ${port}`));

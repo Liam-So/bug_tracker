@@ -53,7 +53,7 @@ const Register = () => {
             }
 
             setRegistering(false);
-        })
+        });
     }
 
     return (
