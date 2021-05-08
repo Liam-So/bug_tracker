@@ -271,8 +271,8 @@ app.put("/tickets/update", async(req, res) => {
   try {
     await ticketRef.doc(req.body.id).update({
       title: req.body.title,
-      value: req.body.title,
-      label: req.body.title,
+      value: req.body.value,
+      label: req.body.label,
       project: req.body.project,
       user: req.body.user,
       type: req.body.type,

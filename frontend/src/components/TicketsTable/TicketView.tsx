@@ -32,17 +32,11 @@ const TicketView = ({ ticket }: { ticket: Ticket | undefined }) => {
   // Modal and form states
   const [showModal, setShowModal] = React.useState(false);
   const [ticketName, setTicketName] = React.useState(ticket?.title);
-  const [assignedProject, setAssignedProject] = React.useState<any>(
-    ticket?.project
-  );
+  const [assignedProject, setAssignedProject] = React.useState<any>(ticket?.project);
   const [assignedDev, setAssignedDev] = React.useState<any>(ticket?.user);
   const [assignedType, setAssignedType] = React.useState<any>(ticket?.type);
-  const [assignedSeverity, setAssignedSeverity] = React.useState<any>(
-    ticket?.severity
-  );
-  const [updatedDescription, setUpdatedDescription] = React.useState(
-    ticket?.description
-  );
+  const [assignedSeverity, setAssignedSeverity] = React.useState<any>(ticket?.severity);
+  const [updatedDescription, setUpdatedDescription] = React.useState(ticket?.description);
 
   React.useEffect(() => {
     const getTicketDetails = async () => {
@@ -138,17 +132,11 @@ const TicketView = ({ ticket }: { ticket: Ticket | undefined }) => {
     title: String(ticketName),
     type: assignedType,
     user: assignedDev,
-    severity: assignedSeverity ? assignedSeverity.value : "",
+    severity: assignedSeverity,
     project: assignedProject,
     comments: [],
     value: String(ticketName),
     label: String(ticketName),
-  };
-
-  const handleClick = async () => {
-    console.log(ticketToSend);
-    const res = await updateTicket(ticketToSend);
-    console.log(res);
   };
 
   return (
@@ -262,7 +250,12 @@ const TicketView = ({ ticket }: { ticket: Ticket | undefined }) => {
                             )
                           ]
                         }
-                        onChange={(e) => setAssignedSeverity(e)}
+                        onChange={(e) => {
+                          console.log(e)
+                          if (e !== null) {
+                            setAssignedSeverity(e.value)
+                          }
+                        }}
                       />
 
                       <label className="block">
@@ -302,7 +295,7 @@ const TicketView = ({ ticket }: { ticket: Ticket | undefined }) => {
                       <button
                         className="bg-blue-500 flex justify-center items-center w-full text-white px-4 py-3 rounded-md focus:outline-none"
                         onClick={() => {
-                          handleClick();
+                          updateTicket(ticketToSend);
                           setShowModal(false);
                         }}
                       >
