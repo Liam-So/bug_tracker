@@ -34,19 +34,6 @@ const TicketPage = (props: RouteComponentProps<any>) => {
     // eslint-disable-next-line
   }, []);
 
-  const mockTicket: Ticket = {
-    description: "This is a test",
-    id: "hjkfsdf90",
-    title: "Dynamic routes",
-    type: "new_feature",
-    user: "QU4QeTorrKgqq2OSh91fwBMtp643",
-    severity: "string",
-    project: "fdsf789",
-    comments: [],
-    value: "Dynamic routes",
-    label: "Dynamic routes",
-  };
-
   return (
     <div>
       <Navbar />

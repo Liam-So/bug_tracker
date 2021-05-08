@@ -8,16 +8,14 @@ import { getUserList } from "../../services/userServices";
 import { getProjectList } from "../../services/projectServices";
 import Project from "../../interfaces/Project";
 import Select from "react-select";
-import { ticketTypeArray, ticketSeverityArray, getDefaultTicketType, getDefaultTicketSeverity } from "../../interfaces/constants";
+import { ticketTypeArray, ticketSeverityArray, getDefaultTicketType, getDefaultTicketSeverity, status_codes, getDefaultStatusCode } from "../../interfaces/constants";
 import { getAssignedUser, getAssignedProject } from "../../services/"
 
 const TicketView = ({ ticket }: { ticket: Ticket | undefined }) => {
   // general view states
   const [comment, setComment] = React.useState<string>("");
   const [isSendingComment, setisSendingComment] = React.useState(false);
-  const [finalTicket, setFinalTicket] = React.useState<Ticket | undefined>(
-    ticket
-  );
+  const [finalTicket, setFinalTicket] = React.useState<Ticket | undefined>(ticket);
   const [users, setUsers] = React.useState<User[]>([]);
   const [projects, setProjects] = React.useState<Project[]>([]);
 
@@ -29,6 +27,7 @@ const TicketView = ({ ticket }: { ticket: Ticket | undefined }) => {
   const [assignedType, setAssignedType] = React.useState<any>(ticket?.type);
   const [assignedSeverity, setAssignedSeverity] = React.useState<any>(ticket?.severity);
   const [updatedDescription, setUpdatedDescription] = React.useState(ticket?.description);
+  const [ticketStatus, setTicketStatus] = React.useState<any>('');
 
   React.useEffect(() => {
     const getTicketDetails = async () => {
@@ -62,6 +61,7 @@ const TicketView = ({ ticket }: { ticket: Ticket | undefined }) => {
     setAssignedType(ticket?.type);
     setAssignedSeverity(ticket?.severity);
     setUpdatedDescription(ticket?.description);
+    setTicketStatus(ticket?.status);
 
     console.log(finalTicket);
     console.log(users);
@@ -90,11 +90,34 @@ const TicketView = ({ ticket }: { ticket: Ticket | undefined }) => {
     comments: [],
     value: String(ticketName),
     label: String(ticketName),
+    status: String(ticketStatus)
+  };
+
+  const getStatus = (status: string) => {
+    if (status === "in_progress") {
+      return (
+        <span className="bg-purple-200 text-purple-600 py-1 px-3 rounded-full text-xs">
+          Active
+        </span>
+      );
+    } else if (status === "completed") {
+      return (
+        <span className="bg-green-200 text-green-600 py-1 px-3 rounded-full text-xs">
+          Completed
+        </span>
+      );
+    } else if (status === "pending") {
+      return (
+        <span className="bg-yellow-200 text-yellow-600 py-2 px-4 rounded-full text-s">
+          Pending
+        </span>
+      );
+    }
   };
 
   return (
     <div>
-      <div className="pl-10 pt-10 md:mb-0 mb-6">
+      <div className="pl-14 pt-10">
         <button
           className="py-2 px-3 bg-gray-200 rounded-md hover:bg-green-200"
           onClick={() => setShowModal(true)}
@@ -109,7 +132,7 @@ const TicketView = ({ ticket }: { ticket: Ticket | undefined }) => {
             <div className="relative py-3 sm:max-w-xl sm:mx-auto">
               <div className="relative px-4 py-10 bg-white mx-8 md:mx-0 shadow rounded-3xl sm:p-10">
                 <div className="max-w-md mx-auto">
-                  <div className="flex items-center space-x-5">
+                  <div className="flex items-center space-x-2">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       className="h-14 w-14 rounded-full flex flex-shrink-0"
@@ -145,6 +168,18 @@ const TicketView = ({ ticket }: { ticket: Ticket | undefined }) => {
                           }
                         />
                       </div>
+
+                      <Select 
+                        closeMenuOnSelect={true}
+                        options={status_codes}
+                        placeholder="Update status"
+                        defaultValue={status_codes[getDefaultStatusCode(String(finalTicket?.status))]}
+                        onChange={e => {
+                          if (e !== null) {
+                            setTicketStatus(e.value);
+                          }
+                        }}
+                      />
 
                       <Select
                         closeMenuOnSelect={true}
@@ -201,7 +236,6 @@ const TicketView = ({ ticket }: { ticket: Ticket | undefined }) => {
                         <textarea
                           className="form-textarea mt-1 block w-full border focus:ring-gray-500 focus:border-gray-900 w-full border-gray-300 rounded-md focus:outline-none text-gray-600 text-sm p-2"
                           placeholder="Write a description for the ticket."
-                          rows={5}
                           defaultValue={finalTicket?.description}
                           onChange={(e) =>
                             setUpdatedDescription(e.target.value)
@@ -250,11 +284,82 @@ const TicketView = ({ ticket }: { ticket: Ticket | undefined }) => {
         <></>
       )}
 
-      <div className="flex flex-wrap">
+<div className="flex flex-wrap">
         {/* STARTS HERE */}
         <div className="p-10 md:w-2/3 md:mb-0 mb-6 flex flex-col w-full">
-          <div className="pattern-dots-md gray-light">
-            <div className="rounded bg-gray-100 p-4 min-h-full max-h-screen overflow-auto">
+        <div className="min-h-full flex items-center justify-center px-4">
+    
+    <div className="max-w-4xl bg-gray-100 w-full rounded-lg shadow-xl">
+        <div className="p-4 border-b">
+            <h2 className="text-2xl ">
+              {finalTicket?.title}
+            </h2>
+            <p className="text-sm text-gray-500">
+                Listed details for the following ticket. 
+            </p>
+        </div>
+        <div>
+            <div className="md:grid md:grid-cols-2 md:space-y-0 space-y-1 p-4 border-b">
+                <p className="text-gray-600">
+                  Ticket Id:
+                </p>
+                <p>
+                    {finalTicket?.id}
+                </p>
+            </div>
+            <div className="md:grid md:grid-cols-2 md:space-y-0 space-y-1 p-4 border-b">
+                <p className="text-gray-600">
+                  Ticket type:
+                </p>
+                <p>
+                    {finalTicket?.type}
+                </p>
+            </div>
+            <div className="md:grid md:grid-cols-2 md:space-y-0 space-y-1 p-4 border-b">
+                <p className="text-gray-600">
+                  Ticket Status
+                </p>
+                <p>
+                    {getStatus(String(finalTicket?.status))}
+                </p>
+            </div>
+            <div className="md:grid md:grid-cols-2 md:space-y-0 space-y-1 p-4 border-b">
+                <p className="text-gray-600">
+                    Assignee
+                </p>
+                <p>
+                  {getAssignedUser(String(finalTicket?.user), users).name}
+                </p>
+            </div>
+            <div className="md:grid md:grid-cols-2 md:space-y-0 space-y-1 p-4 border-b">
+                <p className="text-gray-600">
+                Priority:
+                </p>
+                <p>
+                    {finalTicket?.severity}
+                </p>
+            </div>
+            <div className="md:grid md:grid-cols-2 md:space-y-0 space-y-1 p-4 border-b">
+                <p className="text-gray-600">
+                    Project
+                </p>
+                <p>
+                  {getAssignedProject(String(finalTicket?.project), projects).name}
+                </p>
+            </div>
+            <div className="md:grid md:grid-cols-2 md:space-y-0 space-y-1 p-4 border-b">
+                <p className="text-gray-600">
+                    Description
+                </p>
+                <p>
+                    {finalTicket?.description}
+                </p>
+            </div>
+
+        </div>
+    </div>
+</div>
+            {/* <div className="rounded bg-gray-100 p-4 min-h-full max-h-screen overflow-auto">
               <div className="flex-grow text-gray-800">
                 <h2 className=" text-3xl title-font font-medium mb-3">
                   {finalTicket?.title}
@@ -298,8 +403,7 @@ const TicketView = ({ ticket }: { ticket: Ticket | undefined }) => {
                   </li>
                 </ul>
               </div>
-            </div>
-          </div>
+            </div> */}
         </div>
 
         <div className="p-10 md:w-1/3 md:mb-0 mb-6 flex flex-col w-full">

@@ -247,7 +247,8 @@ app.post("/tickets", async (req, res) => {
       project: req.body.project,
       comments: req.body.comments,
       value: req.body.value,
-      label: req.body.label
+      label: req.body.label,
+      status: req.body.status
     });
 
     await projectRef.doc(req.body.project).update({
@@ -276,7 +277,8 @@ app.put("/tickets/update", async(req, res) => {
       user: req.body.user,
       type: req.body.type,
       severity: req.body.severity,
-      description: req.body.description
+      description: req.body.description,
+      status: req.body.status
     });
 
     res.status(200).send({

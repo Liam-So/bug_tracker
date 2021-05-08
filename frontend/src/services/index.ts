@@ -1,6 +1,6 @@
 import User from "../interfaces/User"
 import Project from "../interfaces/Project"
-
+import * as React from 'react'
 
 // Generate Ticket Id
 export function getTicketId(): string {
@@ -58,3 +58,4 @@ export const getAssignedProject = (id: string, projects: Project[]) => {
   });
   return returnProject;
 }
+

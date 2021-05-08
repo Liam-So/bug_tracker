@@ -17,7 +17,6 @@ export const getDefaultStatusCode = (status: string) => {
     }
 }
 
-
 export const ticketTypeArray = [
     { value: 'new_feature', label: 'New Feature ✔️' },
     { value: 'bug', label: 'Bug 🐛' },

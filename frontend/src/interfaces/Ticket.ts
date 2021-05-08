@@ -11,4 +11,5 @@ export default interface Ticket {
     comments: Comment[];
     value: string;
     label: string;
+    status: string;
 }
