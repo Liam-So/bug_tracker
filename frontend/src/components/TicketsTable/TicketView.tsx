@@ -1,23 +1,15 @@
 import * as React from "react";
 import { auth } from "../../config/firebase";
 import Ticket from "../../interfaces/Ticket";
-import {
-  getTicketById,
-  updateComments,
-  updateTicket,
-} from "../../services/ticketServices";
+import { getTicketById, updateComments, updateTicket } from "../../services/ticketServices";
 import Comment from "../../interfaces/Comment";
 import User from "../../interfaces/User";
 import { getUserList } from "../../services/userServices";
 import { getProjectList } from "../../services/projectServices";
 import Project from "../../interfaces/Project";
 import Select from "react-select";
-import {
-  ticketTypeArray,
-  ticketSeverityArray,
-  getDefaultTicketType,
-  getDefaultTicketSeverity,
-} from "../../interfaces/constants";
+import { ticketTypeArray, ticketSeverityArray, getDefaultTicketType, getDefaultTicketSeverity } from "../../interfaces/constants";
+import { getAssignedUser, getAssignedProject } from "../../services/"
 
 const TicketView = ({ ticket }: { ticket: Ticket | undefined }) => {
   // general view states
@@ -85,45 +77,6 @@ const TicketView = ({ ticket }: { ticket: Ticket | undefined }) => {
 
     const res = await updateComments(commentToSend);
     console.log(res.status);
-  };
-
-  const getAssignedUser = (id: string) => {
-    let returnUser: User = {
-      value: "",
-      label: "",
-      user: "",
-      email: "",
-      name: "",
-      title: "",
-      userDesc: "",
-      userId: "",
-    };
-
-    users.forEach((user) => {
-      if (user.userId === id) {
-        returnUser = user;
-      }
-    });
-    return returnUser;
-  };
-
-  const getAssignedProject = (id: string) => {
-    let returnProject: Project = {
-      description: "",
-      id: "",
-      num_bugs: [],
-      status: "",
-      team: [],
-      name: "",
-      value: "",
-      label: "",
-    };
-    projects.forEach((project) => {
-      if (project.id === id) {
-        returnProject = project;
-      }
-    });
-    return returnProject;
   };
 
   const ticketToSend: Ticket = {
@@ -195,25 +148,10 @@ const TicketView = ({ ticket }: { ticket: Ticket | undefined }) => {
 
                       <Select
                         closeMenuOnSelect={true}
-                        options={projects}
-                        placeholder="Assign to Project"
-                        defaultValue={getAssignedProject(
-                          String(finalTicket?.project)
-                        )}
-                        onChange={(value) => {
-                          console.log(value);
-                          if (value) {
-                            setAssignedProject(value.id);
-                          }
-                        }}
-                      />
-
-                      <Select
-                        closeMenuOnSelect={true}
                         options={users}
                         placeholder="Assign User"
                         defaultValue={getAssignedUser(
-                          String(finalTicket?.user)
+                          String(finalTicket?.user), users
                         )}
                         onChange={(value) => {
                           if (value) {
@@ -344,13 +282,13 @@ const TicketView = ({ ticket }: { ticket: Ticket | undefined }) => {
                     Assignee
                   </li>
                   <li className="leading-relaxed text-lg text-justify">
-                    {getAssignedUser(String(finalTicket?.user)).name}
+                    {getAssignedUser(String(finalTicket?.user), users).name}
                   </li>
                   <li className="leading-relaxed text-xl font-semibold text-justify">
                     Project
                   </li>
                   <li className="leading-relaxed text-lg text-justify">
-                    {getAssignedProject(String(finalTicket?.project)).name}
+                    {getAssignedProject(String(finalTicket?.project), projects).name}
                   </li>
                   <li className="leading-relaxed text-xl font-semibold text-justify">
                     Description:
@@ -377,7 +315,7 @@ const TicketView = ({ ticket }: { ticket: Ticket | undefined }) => {
                           <div className="flex" key={index}>
                             <div className="flex-1 border rounded-lg px-4 py-2 sm:px-6 sm:py-4 leading-relaxed">
                               <strong>
-                                {getAssignedUser(item.userId).name}
+                                {getAssignedUser(item.userId, users).name}
                               </strong>{" "}
                               <span className="text-xs text-gray-400">
                                 {item.time}
