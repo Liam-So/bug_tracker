@@ -15,5 +15,36 @@ export const getDefaultStatusCode = (status: string) => {
     } else {
         return 2;
     }
+}
 
+export const ticketTypeArray = [
+    { value: 'new_feature', label: 'New Feature ✔️' },
+    { value: 'bug', label: 'Bug 🐛' },
+];
+
+export const getDefaultTicketType = (type: string) => {
+    if (type === 'new_feature') {
+        return 0;
+    } else {
+        return 1;
+    }
+}
+
+export const ticketSeverityArray = [
+    { value: 'critical', label: 'Critical 🚑' },
+    { value: 'high', label: 'High 🙀' },
+    { value: 'md', label: 'Medium 😅' },
+    { value: 'low', label: 'Low ☕' }
+];
+
+export const getDefaultTicketSeverity = (type: string) => {
+    if (type === 'critical') {
+        return 0;
+    } else if (type === 'high') {
+        return 1;
+    } else if (type === 'md') {
+        return 2;
+    } else {
+        return 3;
+    }
 }

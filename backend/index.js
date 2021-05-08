@@ -247,7 +247,8 @@ app.post("/tickets", async (req, res) => {
       project: req.body.project,
       comments: req.body.comments,
       value: req.body.value,
-      label: req.body.label
+      label: req.body.label,
+      status: req.body.status
     });
 
     await projectRef.doc(req.body.project).update({
@@ -263,6 +264,56 @@ app.post("/tickets", async (req, res) => {
     });
   }
 });
+
+// update ticket
+app.put("/tickets/update", async(req, res) => {
+  console.log(req.body);
+
+  try {
+    await ticketRef.doc(req.body.id).update({
+      title: req.body.title,
+      value: req.body.value,
+      label: req.body.label,
+      user: req.body.user,
+      type: req.body.type,
+      severity: req.body.severity,
+      description: req.body.description,
+      status: req.body.status
+    });
+
+    res.status(200).send({
+      message: "Successfully updated"
+    });
+  } catch {
+    res.status(400).send({
+      message: "Something went wrong"
+    });
+  }
+})
+
+// update comments in a ticket
+app.put("/tickets/updateComments", async (req, res) => {
+  try {
+    const commentObject = {
+      ticketId: req.body.ticketId,
+      userId: req.body.userId, 
+      time: `${admin.firestore.Timestamp.now().toDate().toDateString()} ${admin.firestore.Timestamp.now().toDate().toLocaleTimeString()}`,
+      message: req.body.message
+    }
+
+    await ticketRef.doc(req.body.ticketId).update({
+      comments: admin.firestore.FieldValue.arrayUnion(commentObject),
+    });
+    
+    res.status(200).send({
+      message: "Successfully sent"
+    })
+  } catch {
+    res.status(400).send({
+      message: "Something went wrong"
+    })
+  }
+})
 
 // listener
 app.listen(port, () => console.log(`listening on localhost: ${port}`));

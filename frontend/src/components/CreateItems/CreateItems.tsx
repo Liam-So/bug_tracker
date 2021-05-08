@@ -52,7 +52,8 @@ const CreateProject = () => {
     project: ticketProject.id,
     comments: [],
     value: ticketTitle,
-    label: ticketTitle
+    label: ticketTitle,
+    status: 'pending'
   };
 
   // Call the API's and set the values
