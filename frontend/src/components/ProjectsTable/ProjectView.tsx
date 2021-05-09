@@ -8,6 +8,7 @@ import Select from "react-select";
 import { status_codes, getDefaultStatusCode } from "../../interfaces/constants"
 import { updateProject } from "../../services/projectServices";
 import { getUserIdsFromArray } from "../../services";
+import DeleteModal from "../DeleteModal/DeleteModal"
 
 const ProjectView = ({ project }: { project: Project | undefined }) => {
 
@@ -97,6 +98,9 @@ const ProjectView = ({ project }: { project: Project | undefined }) => {
             <p className="lg:w-1/2 w-full leading-relaxed text-base text-xl text-gray-600 pb-4">
               {project?.description}
             </p>
+            <div>
+              <DeleteModal deleteProps={() => console.log(("Test"))}/>
+            </div>
             <div className="lg:w-1/2 w-full leading-relaxed text-base text-xl text-gray-600 pb-4">
               Click{" "}
               <button
@@ -273,7 +277,7 @@ const ProjectView = ({ project }: { project: Project | undefined }) => {
                                   {ticket.description}
                                   <a
                                     className="text-blue-500 hover:underline"
-                                    href="/"
+                                    href={`/tickets/${ticket.id}`}
                                   >
                                     {" "}
                                     {ticket.id}

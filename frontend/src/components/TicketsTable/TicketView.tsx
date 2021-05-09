@@ -10,6 +10,7 @@ import Project from "../../interfaces/Project";
 import Select from "react-select";
 import { ticketTypeArray, ticketSeverityArray, getDefaultTicketType, getDefaultTicketSeverity, status_codes, getDefaultStatusCode } from "../../interfaces/constants";
 import { getAssignedUser, getAssignedProject } from "../../services/"
+import DeleteModal from "../DeleteModal/DeleteModal";
 
 const TicketView = ({ ticket }: { ticket: Ticket | undefined }) => {
   // general view states
@@ -117,13 +118,17 @@ const TicketView = ({ ticket }: { ticket: Ticket | undefined }) => {
 
   return (
     <div>
-      <div className="pl-14 pt-10">
-        <button
-          className="py-2 px-3 bg-gray-200 rounded-md hover:bg-green-200"
-          onClick={() => setShowModal(true)}
-        >
-          Edit the ticket
-        </button>
+      <div className="flex">
+        <div className="flex justify-center md:justify-start pt-2 2xl:px-12 pl-14 pt-4">
+          <button
+            className="py-2 px-3 bg-gray-300 rounded-md hover:bg-gray-400 font-semibold text-gray-700"
+            onClick={() => setShowModal(true)}
+          >
+            Edit the ticket
+          </button>
+        </div>
+
+        <DeleteModal deleteProps={() => console.log("Hi")}/>
       </div>
 
       {showModal === true ? (
@@ -291,7 +296,7 @@ const TicketView = ({ ticket }: { ticket: Ticket | undefined }) => {
     
     <div className="max-w-4xl bg-gray-100 w-full rounded-lg shadow-xl">
         <div className="p-4 border-b">
-            <h2 className="text-2xl ">
+            <h2 className="text-2xl font-semibold text-gray-700">
               {finalTicket?.title}
             </h2>
             <p className="text-sm text-gray-500">
