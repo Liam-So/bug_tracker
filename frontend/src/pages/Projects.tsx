@@ -5,8 +5,8 @@ import { getProjectById } from "../services/projectServices";
 import Project from "../interfaces/Project";
 import Firebase, { auth } from "../config/firebase";
 import ProjectView from "../components/ProjectsTable/ProjectView";
-import HomeTable from "../components/HomeTable/HomeTable";
 import CreateProject from "../components/CreateItems/CreateProject";
+import { useHistory } from "react-router-dom";
 
 const Projects = (props: RouteComponentProps<any>) => {
   const [uniqueProject, setUniqueProject] = React.useState<Project>();
@@ -19,6 +19,8 @@ const Projects = (props: RouteComponentProps<any>) => {
   const projectRef = Firebase.firestore().collection("projects");
 
   let id = props.match.params.id;
+
+  const history = useHistory();
 
   React.useEffect(() => {
     if (id) {
@@ -79,7 +81,6 @@ const Projects = (props: RouteComponentProps<any>) => {
         <div className="flex justify-center">
           <div className="w-10/12 flex flex-col justify-center">
             <CreateProject />
-            {/* <HomeTable projects={userProjects} /> */}
             <div className="bg-white pb-4 px-4 rounded-md w-full">
               <div className="w-full flex justify-start px-2 mt-8">
                 <div className="w-full sm:w-64 inline-block relative ">
@@ -140,7 +141,7 @@ const Projects = (props: RouteComponentProps<any>) => {
                         }
                       }).map((project, index) => {
                         return (
-                          <tr key={index} className="hover:bg-gray-100 border-b border-gray-200 py-10">
+                          <tr key={index} className="hover:bg-gray-100 border-b border-gray-200 py-10" onClick={() => history.push(`/projects/${project.id}`)}>
                             <td className="px-4 py-4">{project.name}</td>
                             <td className="px-4 py-4">
                               {project.num_bugs.length}
