@@ -33,7 +33,7 @@ const Home = () => {
         <div>
             <Navbar/>
             <div className="flex flex-col md:flex-row items-start px-8 md:px-20 2xl:px-60">
-                <AssignedTable tickets={userTickets} />
+                <AssignedTable tickets={userTickets} searchBar={false} />
                 <HomeTable projects={userProjects} />
             </div>
         </div>

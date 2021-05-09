@@ -2,14 +2,15 @@ import Ticket from "../../interfaces/Ticket";
 import AssignedTableItem from "./AssignedTableItem";
 import * as React from "react";
 
-const AssignedTable = ({ tickets }: { tickets: Ticket[] | undefined }) => {
+const AssignedTable = ({ tickets, searchBar }: { tickets: Ticket[] | undefined, searchBar: boolean }) => {
   const [searchTerm, setSearchTerm] = React.useState("");
 
 
   return (
     <div className="w-full items-center p-8">
       <div className="mb-4 mx-0 sm:ml-4 xl:mr-4">
-        <div className="w-full flex justify-start mt-8 mb-4">
+        {searchBar && (
+          <div className="w-full flex justify-start mt-8 mb-4">
           <div className="w-full sm:w-64 inline-block relative ">
             <input
               type=""
@@ -30,6 +31,8 @@ const AssignedTable = ({ tickets }: { tickets: Ticket[] | undefined }) => {
             </div>
           </div>
         </div>
+        )}
+        
         <div className="shadow-lg rounded-2xl bg-white dark:bg-gray-700 w-full">
           <p className="font-bold text-md p-4 text-black dark:text-white">
             My Active Tasks

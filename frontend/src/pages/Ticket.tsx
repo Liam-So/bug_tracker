@@ -90,7 +90,7 @@ const TicketPage = (props: RouteComponentProps<any>) => {
               </div> */}
 
               
-            <AssignedTable tickets={userTickets} />
+            <AssignedTable tickets={userTickets} searchBar={true} />
           </div>
         </div>
       ) : (
