@@ -1,10 +1,13 @@
 import * as React from "react";
+import { useHistory } from "react-router-dom";
 
 type deleteProps = {
   onClick: () => void;
 };
 
 const DeleteModal = ({ deleteProps }: { deleteProps: () => void }) => {
+  const history = useHistory();
+
   const [showModal, setShowModal] = React.useState(false);
   return (
     <div>
@@ -57,6 +60,7 @@ const DeleteModal = ({ deleteProps }: { deleteProps: () => void }) => {
                   onClick={() => {
                     setShowModal(false);
                     deleteProps();
+                    history.push('/deleted');
                   }}
                 >
                   Delete

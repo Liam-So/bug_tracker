@@ -6,7 +6,7 @@ import User from "../../interfaces/User";
 import { getUserList } from "../../services/userServices";
 import Select from "react-select";
 import { status_codes, getDefaultStatusCode } from "../../interfaces/constants";
-import { updateProject } from "../../services/projectServices";
+import { updateProject, deleteProject } from "../../services/projectServices";
 import { getUserIdsFromArray } from "../../services";
 import DeleteModal from "../DeleteModal/DeleteModal";
 
@@ -109,7 +109,7 @@ const ProjectView = ({ project }: { project: Project | undefined }) => {
                 </button>
               </div>
               <div>
-                <DeleteModal deleteProps={() => console.log("Test")} />
+                <DeleteModal deleteProps={() => deleteProject(String(project?.id))} />
               </div>
             </div>
 

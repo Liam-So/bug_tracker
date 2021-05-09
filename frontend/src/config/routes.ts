@@ -4,6 +4,7 @@ import Forgot from "../pages/auth/Forgot";
 import Login from "../pages/auth/Login";
 import Register from "../pages/auth/Register";
 import ResetPasswordPage from "../pages/auth/Reset";
+import Deleted from "../pages/Deleted";
 import Home from "../pages/Home";
 import Projects from "../pages/Projects";
 import Ticket from "../pages/Ticket";
@@ -77,6 +78,13 @@ const routes: Route[] = [
         exact: true,
         component: Ticket,
         name: 'Tickets Page',
+        protected: true
+    },
+    {
+        path: '/deleted',
+        exact: true,
+        component: Deleted,
+        name: 'Successful Delete Page',
         protected: true
     },
 ];

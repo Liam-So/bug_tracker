@@ -166,6 +166,24 @@ app.post("/projects", async (req, res) => {
     }
   });
 
+  // delete project
+  app.delete("/projects/:id", async (req, res) => {
+    console.log(req.params.id)
+    try {
+      let projectId = req.params.id;
+      
+      await projectRef.doc(projectId).delete();
+
+      res.status(200).send({
+        message: "Successfully deleted"
+      });
+    } catch {
+      res.status(400).send({
+        message: "Something went wrong"
+      });
+    }
+  });
+
 // get tickets
 app.get("/tickets", async (req, res) => {
   try {
