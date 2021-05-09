@@ -29,3 +29,7 @@ export const updateComments = async (comment: Comment) => {
 export const updateTicket = async (ticket: Ticket) => {
     return await axios.put(`${TICKET_URL}/update`, ticket);
 }
+
+export const deleteTicket = async (id: string) => {
+    return await axios.delete(`${TICKET_URL}/delete/${id}`);
+}

@@ -2,6 +2,7 @@ import * as React from "react";
 import { auth } from "../../config/firebase";
 import Ticket from "../../interfaces/Ticket";
 import {
+  deleteTicket,
   getTicketById,
   updateComments,
   updateTicket,
@@ -147,7 +148,7 @@ const TicketView = ({ ticket }: { ticket: Ticket | undefined }) => {
           </button>
         </div>
 
-        <DeleteModal deleteProps={() => console.log("Hi")} />
+        <DeleteModal deleteProps={() => deleteTicket(String(ticket?.id))} />
       </div>
 
       {showModal === true ? (
