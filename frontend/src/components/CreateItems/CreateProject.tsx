@@ -1,10 +1,9 @@
 import * as React from 'react';
-import { auth } from "../../config/firebase";
 import Project from "../../interfaces/Project";
 import User from "../../interfaces/User";
 import Select from "react-select";
 import { getTicketId, getUserIdsFromArray } from "../../services";
-import { getProjectList, sendProject } from "../../services/projectServices"
+import { sendProject } from "../../services/projectServices"
 import { getUserList } from "../../services/userServices"
 
 const CreateProject = () => {

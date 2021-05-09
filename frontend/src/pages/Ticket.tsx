@@ -2,35 +2,58 @@ import { RouteComponentProps, withRouter } from "react-router";
 import * as React from "react";
 import { Navbar } from "../components/Navbar/Navbar";
 import Ticket from "../interfaces/Ticket";
-import { auth } from "../config/firebase";
-import { getTicketById, getTicketListForUser } from "../services/ticketServices";
+import Firebase, { auth } from "../config/firebase";
+import {
+  getTicketById,
+} from "../services/ticketServices";
 import TicketView from "../components/TicketsTable/TicketView";
 import AssignedTable from "../components/AssignedTable/AssignedTable";
 import CreateTicket from "../components/CreateItems/CreateTicket";
 
 const TicketPage = (props: RouteComponentProps<any>) => {
   const [ticket, setTicket] = React.useState<Ticket>();
-  const [tickets, setTickets] = React.useState<Ticket[] | null>(null);
+  const ticketRef = Firebase.firestore().collection("tickets");
+  const [userTickets, setUserTickets] = React.useState<Ticket[] | null>(null);
 
   let id = props.match.params.id;
-  let userId = auth.currentUser?.uid;
 
   React.useEffect(() => {
     if (id) {
-      const getTicket = async() => {
+      const getTicket = async () => {
         const res = await getTicketById(String(id));
         setTicket(res.data);
-      }
+      };
 
       getTicket();
     } else {
+      console.log("yo");
+      // Use real time data for changes
+      const getUserTickets = () => {
+        ticketRef.where("user", "==", auth.currentUser?.uid).onSnapshot((e) => {
+          const items: Ticket[] = [];
 
-      const arrayOfTickets = async() => {
-        const res = await getTicketListForUser(String(userId));
-        setTickets(res.data);
-      } 
+          e.forEach((item) => {
+            items.push({
+              description: item.data().description,
+              title: item.data().title,
+              user: item.data().user,
+              type: item.data().type,
+              id: item.data().id,
+              severity: item.data().severity,
+              project: item.data().project,
+              comments: item.data().comments,
+              value: item.data().value,
+              label: item.data().label,
+              status: item.data().status,
+            });
+          });
 
-      arrayOfTickets();
+          console.log(items);
+
+          setUserTickets(items);
+        });
+      };
+      getUserTickets();
     }
     // eslint-disable-next-line
   }, []);
@@ -38,13 +61,15 @@ const TicketPage = (props: RouteComponentProps<any>) => {
   return (
     <div>
       <Navbar />
-      {tickets !== null ? (
-        <div>
-          <CreateTicket/>
-          <AssignedTable tickets={tickets} />
-      </div>
-      ): (
-          <TicketView ticket={ticket} />
+      {userTickets ? (
+        <div className="flex justify-center">
+          <div className="w-10/12 flex flex-col justify-center">
+            <CreateTicket />
+            <AssignedTable tickets={userTickets} />
+          </div>
+        </div>
+      ) : (
+        <TicketView ticket={ticket} />
       )}
     </div>
   );

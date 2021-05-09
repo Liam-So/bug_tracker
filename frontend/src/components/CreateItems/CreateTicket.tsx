@@ -5,8 +5,8 @@ import Ticket from "../../interfaces/Ticket";
 import User from "../../interfaces/User";
 import Select from "react-select";
 import { ticketTypeArray, ticketSeverityArray } from "./Data";
-import { getTicketId, getUserIdsFromArray } from "../../services";
-import { getProjectList, sendProject } from "../../services/projectServices"
+import { getTicketId } from "../../services";
+import { getProjectList } from "../../services/projectServices"
 import { getUserList } from "../../services/userServices"
 import { sendTicket } from "../../services/ticketServices"
 
