@@ -86,6 +86,7 @@ const TicketView = ({ ticket }: { ticket: Ticket | undefined }) => {
 
     console.log(finalTicket);
     console.log(users);
+    // eslint-disable-next-line
   }, [ticket?.id, ticket, isSendingComment]);
 
   const sendComment = async () => {
@@ -139,7 +140,7 @@ const TicketView = ({ ticket }: { ticket: Ticket | undefined }) => {
   return (
     <div>
       <div className="flex">
-        <div className="flex justify-center md:justify-start pt-2 2xl:px-12 pl-14 pt-4">
+        <div className="flex justify-center md:justify-start pt-2 pl-14 2xl:pl-36 pt-4">
           <button
             className="py-2 px-3 bg-gray-300 rounded-md hover:bg-gray-400 font-semibold text-gray-700"
             onClick={() => setShowModal(true)}

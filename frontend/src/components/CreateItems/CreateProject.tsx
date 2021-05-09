@@ -40,7 +40,7 @@ const CreateProject = () => {
   return (
     <>
       {/* Buttons */}
-      <div className="flex justify-center md:justify-start pt-2 2xl:px-12 pl-8 pt-4">
+      <div className="flex justify-center md:justify-start pt-2 2xl:px-12 pl-8 pt-4 2xl:pl-4">
         <button
           className="py-2 px-3 bg-gray-200 rounded-md hover:bg-gray-400 font-semibold text-gray-700"
           onClick={() => setModalProject(true)}

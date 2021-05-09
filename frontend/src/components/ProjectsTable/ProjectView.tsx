@@ -100,7 +100,7 @@ const ProjectView = ({ project }: { project: Project | undefined }) => {
               {project?.description}
             </p>
 
-            <div className="flex flex-col md:flex-row items-center justify-evenly w-80">
+            <div className="flex flex-col md:flex-row items-center justify-evenly w-80 2xl:w-96">
 
               <div className="flex justify-center md:justify-start pt-2 2xl:px-12 ">
                 <button

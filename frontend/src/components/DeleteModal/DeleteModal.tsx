@@ -1,10 +1,6 @@
 import * as React from "react";
 import { useHistory } from "react-router-dom";
 
-type deleteProps = {
-  onClick: () => void;
-};
-
 const DeleteModal = ({ deleteProps }: { deleteProps: () => void }) => {
   const history = useHistory();
 

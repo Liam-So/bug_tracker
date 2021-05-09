@@ -10,10 +10,10 @@ const AssignedTable = ({ tickets, searchBar }: { tickets: Ticket[] | undefined, 
     <div className="w-full items-center p-8">
       <div className="mb-4 mx-0 sm:ml-4 xl:mr-4">
         {searchBar && (
-          <div className="w-full flex justify-start mt-8 mb-4">
+          <div className="w-full flex justify-start mt-2 mb-4">
           <div className="w-full sm:w-64 inline-block relative ">
             <input
-              type=""
+              type="text"
               name=""
               className="leading-snug border border-gray-300 block w-full appearance-none bg-gray-100 text-sm text-gray-600 py-1 px-4 pl-8 rounded-lg"
               placeholder="Search by Ticket Name"
@@ -47,6 +47,8 @@ const AssignedTable = ({ tickets, searchBar }: { tickets: Ticket[] | undefined, 
                       return ticket;
                   } else if (ticket.title.toLowerCase().includes(searchTerm.toLowerCase())) {
                       return ticket;
+                  } else {
+                    return false;
                   }
               }).map((e, index) => {
                 return <AssignedTableItem item={e} key={index} num={index} />;

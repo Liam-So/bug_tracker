@@ -58,7 +58,7 @@ const CreateTicket = () => {
   return (
     <>
       {/* Buttons */}
-      <div className="flex justify-center md:justify-start pt-2 2xl:px-12 pl-6 pt-5">
+      <div className="flex justify-center md:justify-start pt-2 2xl:px-12 pl-6 2xl:pl-4 pt-5">
         <button
           className="py-2 px-3 bg-green-200 rounded-md hover:bg-gray-400 font-semibold text-gray-700"
           onClick={() => setModalTicket(true)}
