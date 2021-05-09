@@ -7,6 +7,7 @@ import Project from '../interfaces/Project'
 import { auth } from '../config/firebase'
 import ProjectView from '../components/ProjectsTable/ProjectView'
 import HomeTable from '../components/HomeTable/HomeTable'
+import CreateProject from '../components/CreateItems/CreateProject'
 
 const Projects = (props: RouteComponentProps<any>) => {    
     const [uniqueProject, setUniqueProject] = React.useState<Project>();
@@ -47,7 +48,10 @@ const Projects = (props: RouteComponentProps<any>) => {
             <Navbar />
             {listOfProjects !== null ? (
                 // <ProjectsTable />
-                <div className="flex justify-center">
+                <div className="flex flex-col justify-center">
+                    <div>
+                    <CreateProject/>
+                    </div>
                     <HomeTable projects={listOfProjects}/>
                 </div>
 
