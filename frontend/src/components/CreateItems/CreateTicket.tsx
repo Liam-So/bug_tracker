@@ -63,7 +63,7 @@ const CreateTicket = () => {
           className="py-2 px-3 bg-gray-200 rounded-md hover:bg-gray-400 font-semibold text-gray-700"
           onClick={() => setModalTicket(true)}
         >
-          Create New Project
+          Create New Ticket
         </button>
       </div>
 

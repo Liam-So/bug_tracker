@@ -15,7 +15,6 @@ const CreateProject = () => {
   const [assignedUsers, setAssignedUsers] = React.useState<any | null>();
   // used by both project and ticket
   const [users, setUsers] = React.useState<User[]>([]); 
-  const [projects, setProjects] = React.useState<Project[]>([]);
 
   // Object creation to send to the DB
   const projectObject: Project = {
@@ -36,13 +35,7 @@ const CreateProject = () => {
       setUsers(res);
     };
 
-    const getProjects = async () => {
-        const res = await getProjectList(String(auth.currentUser?.uid));
-        setProjects(res);
-    }
-
     getUsers();
-    getProjects();
   }, []);
 
   return (

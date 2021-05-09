@@ -1,20 +1,20 @@
 import { RouteComponentProps, withRouter } from 'react-router'
 import { Navbar } from '../components/Navbar/Navbar'
-import ProjectsTable from '../components/ProjectsTable/ProjectsTable'
 import * as React from 'react'
-import { getProjectById, getProjectList } from '../services/projectServices'
+import { getProjectById } from '../services/projectServices'
 import Project from '../interfaces/Project'
-import { auth } from '../config/firebase'
+import Firebase, { auth } from '../config/firebase'
 import ProjectView from '../components/ProjectsTable/ProjectView'
 import HomeTable from '../components/HomeTable/HomeTable'
 import CreateProject from '../components/CreateItems/CreateProject'
 
 const Projects = (props: RouteComponentProps<any>) => {    
     const [uniqueProject, setUniqueProject] = React.useState<Project>();
-    const [listOfProjects, setListOfProjects] = React.useState<Project[] | null>(null);
+    const [userProjects, setUserProjects] = React.useState<Project[] | null>(null);
+
+    const projectRef = Firebase.firestore().collection('projects');
 
     let id = props.match.params.id;
-    let userId = auth.currentUser?.uid;
     
     React.useEffect(() => {
         if (id) {
@@ -29,15 +29,31 @@ const Projects = (props: RouteComponentProps<any>) => {
             console.log(uniqueProject)
         }
         else {
+            // Use real time data for changes
+            const getUserProjects = () => {
+                projectRef.where('team', 'array-contains', auth.currentUser?.uid).onSnapshot(e => {
+        
+                    const items: Project[] = [];
+        
+                    e.forEach(item => {
+                        console.log(item.data())
+                        items.push({
+                            description: item.data().description,
+                            id: item.data().id,
+                            num_bugs: item.data().num_bugs,
+                            status: item.data().status,
+                            team: item.data().team,
+                            name: item.data().name,
+                            value: item.data().value,
+                            label: item.data().label
+                        })
+                    })
+        
+                    setUserProjects(items);
+                })
+            }
 
-            const getAllProjects = async () => {
-                const res = await getProjectList(String(userId));
-
-                setListOfProjects(res);
-            };
-
-            getAllProjects();
-            console.log(listOfProjects)
+            getUserProjects();
         }
         console.log(uniqueProject)
         // eslint-disable-next-line
@@ -46,13 +62,13 @@ const Projects = (props: RouteComponentProps<any>) => {
     return (
         <div>
             <Navbar />
-            {listOfProjects !== null ? (
+            {userProjects ? (
                 // <ProjectsTable />
                 <div className="flex flex-col justify-center">
                     <div>
                     <CreateProject/>
                     </div>
-                    <HomeTable projects={listOfProjects}/>
+                    <HomeTable projects={userProjects}/>
                 </div>
 
             ) : (
