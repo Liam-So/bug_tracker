@@ -11,7 +11,7 @@ const DeleteModal = ({ deleteProps }: { deleteProps: () => void }) => {
   const [showModal, setShowModal] = React.useState(false);
   return (
     <div>
-      <div className="flex justify-center md:justify-start pt-2 2xl:px-12 pl-8 pt-4">
+      <div className="flex justify-center md:justify-start pt-2 2xl:px-12">
         <button
           className="py-2 px-3 bg-red-400 rounded-md hover:bg-gray-400 font-semibold text-white"
           onClick={() => setShowModal(true)}
