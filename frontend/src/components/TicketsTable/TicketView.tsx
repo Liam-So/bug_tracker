@@ -148,7 +148,10 @@ const TicketView = ({ ticket }: { ticket: Ticket | undefined }) => {
           </button>
         </div>
 
+        <div className="px-4 mt-2">
         <DeleteModal deleteProps={() => deleteTicket(String(ticket?.id))} />
+
+        </div>
       </div>
 
       {showModal === true ? (

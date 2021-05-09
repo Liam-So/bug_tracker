@@ -66,7 +66,10 @@ const TicketPage = (props: RouteComponentProps<any>) => {
       {userTickets ? (
         <div className="flex justify-center">
           <div className="w-10/12 flex flex-col justify-center">
+            <div className="px-6">
             <CreateTicket />
+
+            </div>
             {/* <div className="w-full flex justify-start px-2 mt-8 px-12">
                 <div className="w-full sm:w-64 inline-block relative ">
                   <input

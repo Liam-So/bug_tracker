@@ -9,6 +9,7 @@ import { status_codes, getDefaultStatusCode } from "../../interfaces/constants";
 import { updateProject, deleteProject } from "../../services/projectServices";
 import { getUserIdsFromArray } from "../../services";
 import DeleteModal from "../DeleteModal/DeleteModal";
+import CreateTicket from "../CreateItems/CreateTicket"
 
 const ProjectView = ({ project }: { project: Project | undefined }) => {
   const [tickets, setTickets] = React.useState<Ticket[]>([]);
@@ -95,12 +96,13 @@ const ProjectView = ({ project }: { project: Project | undefined }) => {
               {project?.name}
             </h1>
             {getStatus()}
-            <p className="lg:w-1/2 w-full leading-relaxed text-base text-xl text-gray-600 pb-4 mt-2">
+            <p className="lg:w-1/2 w-full leading-relaxed text-base text-xl text-gray-600 pb-4 mt-2 px-16 text-center">
               {project?.description}
             </p>
 
-            <div className="flex">
-              <div className="flex justify-center md:justify-start pt-2 2xl:px-12 pl-8 pt-4">
+            <div className="flex flex-col md:flex-row items-center justify-evenly w-80">
+
+              <div className="flex justify-center md:justify-start pt-2 2xl:px-12 ">
                 <button
                   className="py-2 px-3 bg-gray-200 rounded-md hover:bg-gray-400 font-semibold text-gray-600"
                   onClick={() => setStatusModal(true)}
@@ -111,6 +113,7 @@ const ProjectView = ({ project }: { project: Project | undefined }) => {
               <div>
                 <DeleteModal deleteProps={() => deleteProject(String(project?.id))} />
               </div>
+              
             </div>
 
             <div className="lg:w-1/2 w-full leading-relaxed text-base text-xl text-gray-600 pb-4">
@@ -238,6 +241,7 @@ const ProjectView = ({ project }: { project: Project | undefined }) => {
                       </div>
                     </div>
                   </div>
+
                 </div>
               ) : (
                 <></>
@@ -245,6 +249,7 @@ const ProjectView = ({ project }: { project: Project | undefined }) => {
             </div>
           </div>
 
+          <CreateTicket/>
           <div className="flex flex-wrap -m-4">
             {/* STARTS HERE */}
             <div className="p-10 md:w-2/3 md:mb-0 mb-6 flex flex-col w-full">
