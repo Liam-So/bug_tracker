@@ -15,7 +15,7 @@ const AssignedTable = ({ tickets }: { tickets: Ticket[] | undefined }) => {
               type=""
               name=""
               className="leading-snug border border-gray-300 block w-full appearance-none bg-gray-100 text-sm text-gray-600 py-1 px-4 pl-8 rounded-lg"
-              placeholder="Search by Project Name"
+              placeholder="Search by Ticket Name"
               onChange={(e) => setSearchTerm(e.target.value)}
             />
 
