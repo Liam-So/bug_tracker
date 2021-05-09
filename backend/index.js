@@ -166,6 +166,24 @@ app.post("/projects", async (req, res) => {
     }
   });
 
+  // delete project
+  app.delete("/projects/:id", async (req, res) => {
+    console.log(req.params.id)
+    try {
+      let projectId = req.params.id;
+      
+      await projectRef.doc(projectId).delete();
+
+      res.status(200).send({
+        message: "Successfully deleted"
+      });
+    } catch {
+      res.status(400).send({
+        message: "Something went wrong"
+      });
+    }
+  });
+
 // get tickets
 app.get("/tickets", async (req, res) => {
   try {
@@ -313,7 +331,42 @@ app.put("/tickets/updateComments", async (req, res) => {
       message: "Something went wrong"
     })
   }
-})
+});
+
+
+// delete a ticket
+app.delete("/tickets/delete/:id", async (req, res) => {
+
+  try {
+    // delete the ticket
+    await ticketRef.doc(req.params.id).delete();
+
+    // search for the project that has this ticket
+    const project = await projectRef.where('num_bugs', 'array-contains', req.params.id).get();
+
+    let arr = [];
+    project.forEach(p => {
+      arr.push(p.data());
+    });
+
+    // a ticket can only be assigned to one project so we take the 0 index
+    let projectId = arr[0].id;
+
+    // remove the ticket from the array in the specific project
+    await projectRef.doc(projectId).update({
+      num_bugs: admin.firestore.FieldValue.arrayRemove(req.params.id)
+    });
+
+    res.status(200).send({
+      message: "Successfully deleted"
+    })
+
+  } catch {
+    res.status(400).send({
+      message: "Something went wrong"
+    });
+  }
+});
 
 // listener
 app.listen(port, () => console.log(`listening on localhost: ${port}`));

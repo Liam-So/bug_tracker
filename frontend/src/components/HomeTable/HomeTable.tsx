@@ -2,6 +2,7 @@ import HomeTableItem from "./HomeTableItem";
 import Project from "../../interfaces/Project";
 
 const HomeTable = ({ projects } : { projects: Project[] | undefined })  => {
+
     return (
     <div className="rounded-md w-full md:w-6/12 flex justify-center">
 

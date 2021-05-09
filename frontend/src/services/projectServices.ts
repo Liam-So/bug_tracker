@@ -26,3 +26,8 @@ export const updateProject = async (project: Project) => {
     console.log(project)
     return await axios.put(`${PROJECT_URL}/update`, project);
 }
+
+// delete a project to DB
+export const deleteProject = async (projectId: string) => {
+    return await axios.delete(`${PROJECT_URL}/${projectId}`);
+}

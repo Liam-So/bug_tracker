@@ -5,12 +5,12 @@ import Ticket from "../../interfaces/Ticket";
 import User from "../../interfaces/User";
 import { getUserList } from "../../services/userServices";
 import Select from "react-select";
-import { status_codes, getDefaultStatusCode } from "../../interfaces/constants"
-import { updateProject } from "../../services/projectServices";
+import { status_codes, getDefaultStatusCode } from "../../interfaces/constants";
+import { updateProject, deleteProject } from "../../services/projectServices";
 import { getUserIdsFromArray } from "../../services";
+import DeleteModal from "../DeleteModal/DeleteModal";
 
 const ProjectView = ({ project }: { project: Project | undefined }) => {
-
   const [tickets, setTickets] = React.useState<Ticket[]>([]);
   const [userList, setUserList] = React.useState<User[]>([]);
   const [statusModal, setStatusModal] = React.useState(false);
@@ -82,30 +82,38 @@ const ProjectView = ({ project }: { project: Project | undefined }) => {
     team: getUserIdsFromArray(listOfUsers),
     name: String(projectName),
     value: String(projectName),
-    label: String(projectName)
+    label: String(projectName),
   };
-  
+
   return (
     <div>
       <section className=" text-gray-200">
         <div className="max-w-6xl mx-auto px-5 py-24 ">
           <div className="flex flex-wrap w-full mb-20 flex-col items-center text-center">
-            <h1 className=" title-font mb-2 text-3xl font-extrabold leading-10 tracking-tight text-left sm:text-5xl sm:leading-none md:text-6xl text-gray-600">
+            <h1 className=" title-font mb-5 text-3xl font-extrabold leading-10 tracking-tight text-left sm:text-5xl sm:leading-none md:text-6xl text-gray-600">
               {" "}
               {project?.name}
             </h1>
-            <p className="lg:w-1/2 w-full leading-relaxed text-base text-xl text-gray-600 pb-4">
+            {getStatus()}
+            <p className="lg:w-1/2 w-full leading-relaxed text-base text-xl text-gray-600 pb-4 mt-2">
               {project?.description}
             </p>
+
+            <div className="flex">
+              <div className="flex justify-center md:justify-start pt-2 2xl:px-12 pl-8 pt-4">
+                <button
+                  className="py-2 px-3 bg-gray-200 rounded-md hover:bg-gray-400 font-semibold text-gray-600"
+                  onClick={() => setStatusModal(true)}
+                >
+                  Edit Project
+                </button>
+              </div>
+              <div>
+                <DeleteModal deleteProps={() => deleteProject(String(project?.id))} />
+              </div>
+            </div>
+
             <div className="lg:w-1/2 w-full leading-relaxed text-base text-xl text-gray-600 pb-4">
-              Click{" "}
-              <button
-                className="bg-red-300 rounded-md px-2 cursor-pointer animate-pulse"
-                onClick={() => setStatusModal(true)}
-              >
-                here
-              </button>{" "}
-              to edit the Project.
               {statusModal === true ? (
                 <div className="justify-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
                   <div className="h-full flex flex-col justify-center sm:py-12">
@@ -148,7 +156,9 @@ const ProjectView = ({ project }: { project: Project | undefined }) => {
                                   className="px-4 py-2 border focus:ring-gray-500 focus:border-gray-900 w-full sm:text-sm border-gray-300 rounded-md focus:outline-none text-gray-600 h-8"
                                   placeholder="Project Name"
                                   value={projectName}
-                                  onChange={(e) => setProjectName(e.target.value)}
+                                  onChange={(e) =>
+                                    setProjectName(e.target.value)
+                                  }
                                 />
                               </div>
 
@@ -156,7 +166,9 @@ const ProjectView = ({ project }: { project: Project | undefined }) => {
                                 closeMenuOnSelect={false}
                                 options={status_codes}
                                 placeholder="Update Project Status"
-                                defaultValue={status_codes[getDefaultStatusCode(status)]}
+                                defaultValue={
+                                  status_codes[getDefaultStatusCode(status)]
+                                }
                                 onChange={(e) => {
                                   if (e !== null) {
                                     setStatus(e.value);
@@ -183,7 +195,9 @@ const ProjectView = ({ project }: { project: Project | undefined }) => {
                                   className="form-textarea mt-1 block w-full border focus:ring-gray-500 focus:border-gray-900 w-full border-gray-300 rounded-md focus:outline-none text-gray-600 text-sm p-2"
                                   placeholder=" Write a description for the Project."
                                   rows={5}
-                                  onChange={(e) => setDescription(e.target.value)}
+                                  onChange={(e) =>
+                                    setDescription(e.target.value)
+                                  }
                                   defaultValue={description}
                                 />
                               </label>
@@ -229,10 +243,6 @@ const ProjectView = ({ project }: { project: Project | undefined }) => {
                 <></>
               )}
             </div>
-            {getStatus()}
-            <div className="flex mt-6 justify-center">
-              <div className="w-16 h-1 rounded-full bg-indigo-500 inline-flex"></div>
-            </div>
           </div>
 
           <div className="flex flex-wrap -m-4">
@@ -273,7 +283,7 @@ const ProjectView = ({ project }: { project: Project | undefined }) => {
                                   {ticket.description}
                                   <a
                                     className="text-blue-500 hover:underline"
-                                    href="/"
+                                    href={`/tickets/${ticket.id}`}
                                   >
                                     {" "}
                                     {ticket.id}

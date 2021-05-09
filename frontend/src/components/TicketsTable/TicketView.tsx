@@ -1,33 +1,54 @@
 import * as React from "react";
 import { auth } from "../../config/firebase";
 import Ticket from "../../interfaces/Ticket";
-import { getTicketById, updateComments, updateTicket } from "../../services/ticketServices";
+import {
+  deleteTicket,
+  getTicketById,
+  updateComments,
+  updateTicket,
+} from "../../services/ticketServices";
 import Comment from "../../interfaces/Comment";
 import User from "../../interfaces/User";
 import { getUserList } from "../../services/userServices";
 import { getProjectList } from "../../services/projectServices";
 import Project from "../../interfaces/Project";
 import Select from "react-select";
-import { ticketTypeArray, ticketSeverityArray, getDefaultTicketType, getDefaultTicketSeverity, status_codes, getDefaultStatusCode } from "../../interfaces/constants";
-import { getAssignedUser, getAssignedProject } from "../../services/"
+import {
+  ticketTypeArray,
+  ticketSeverityArray,
+  getDefaultTicketType,
+  getDefaultTicketSeverity,
+  status_codes,
+  getDefaultStatusCode,
+} from "../../interfaces/constants";
+import { getAssignedUser, getAssignedProject } from "../../services/";
+import DeleteModal from "../DeleteModal/DeleteModal";
 
 const TicketView = ({ ticket }: { ticket: Ticket | undefined }) => {
   // general view states
   const [comment, setComment] = React.useState<string>("");
   const [isSendingComment, setisSendingComment] = React.useState(false);
-  const [finalTicket, setFinalTicket] = React.useState<Ticket | undefined>(ticket);
+  const [finalTicket, setFinalTicket] = React.useState<Ticket | undefined>(
+    ticket
+  );
   const [users, setUsers] = React.useState<User[]>([]);
   const [projects, setProjects] = React.useState<Project[]>([]);
 
   // Modal and form states
   const [showModal, setShowModal] = React.useState(false);
   const [ticketName, setTicketName] = React.useState(ticket?.title);
-  const [assignedProject, setAssignedProject] = React.useState<any>(ticket?.project);
+  const [assignedProject, setAssignedProject] = React.useState<any>(
+    ticket?.project
+  );
   const [assignedDev, setAssignedDev] = React.useState<any>(ticket?.user);
   const [assignedType, setAssignedType] = React.useState<any>(ticket?.type);
-  const [assignedSeverity, setAssignedSeverity] = React.useState<any>(ticket?.severity);
-  const [updatedDescription, setUpdatedDescription] = React.useState(ticket?.description);
-  const [ticketStatus, setTicketStatus] = React.useState<any>('');
+  const [assignedSeverity, setAssignedSeverity] = React.useState<any>(
+    ticket?.severity
+  );
+  const [updatedDescription, setUpdatedDescription] = React.useState(
+    ticket?.description
+  );
+  const [ticketStatus, setTicketStatus] = React.useState<any>("");
 
   React.useEffect(() => {
     const getTicketDetails = async () => {
@@ -90,7 +111,7 @@ const TicketView = ({ ticket }: { ticket: Ticket | undefined }) => {
     comments: [],
     value: String(ticketName),
     label: String(ticketName),
-    status: String(ticketStatus)
+    status: String(ticketStatus),
   };
 
   const getStatus = (status: string) => {
@@ -117,13 +138,17 @@ const TicketView = ({ ticket }: { ticket: Ticket | undefined }) => {
 
   return (
     <div>
-      <div className="pl-14 pt-10">
-        <button
-          className="py-2 px-3 bg-gray-200 rounded-md hover:bg-green-200"
-          onClick={() => setShowModal(true)}
-        >
-          Edit the ticket
-        </button>
+      <div className="flex">
+        <div className="flex justify-center md:justify-start pt-2 2xl:px-12 pl-14 pt-4">
+          <button
+            className="py-2 px-3 bg-gray-300 rounded-md hover:bg-gray-400 font-semibold text-gray-700"
+            onClick={() => setShowModal(true)}
+          >
+            Edit the ticket
+          </button>
+        </div>
+
+        <DeleteModal deleteProps={() => deleteTicket(String(ticket?.id))} />
       </div>
 
       {showModal === true ? (
@@ -169,12 +194,16 @@ const TicketView = ({ ticket }: { ticket: Ticket | undefined }) => {
                         />
                       </div>
 
-                      <Select 
+                      <Select
                         closeMenuOnSelect={true}
                         options={status_codes}
                         placeholder="Update status"
-                        defaultValue={status_codes[getDefaultStatusCode(String(finalTicket?.status))]}
-                        onChange={e => {
+                        defaultValue={
+                          status_codes[
+                            getDefaultStatusCode(String(finalTicket?.status))
+                          ]
+                        }
+                        onChange={(e) => {
                           if (e !== null) {
                             setTicketStatus(e.value);
                           }
@@ -186,7 +215,8 @@ const TicketView = ({ ticket }: { ticket: Ticket | undefined }) => {
                         options={users}
                         placeholder="Assign User"
                         defaultValue={getAssignedUser(
-                          String(finalTicket?.user), users
+                          String(finalTicket?.user),
+                          users
                         )}
                         onChange={(value) => {
                           if (value) {
@@ -224,9 +254,9 @@ const TicketView = ({ ticket }: { ticket: Ticket | undefined }) => {
                           ]
                         }
                         onChange={(e) => {
-                          console.log(e)
+                          console.log(e);
                           if (e !== null) {
-                            setAssignedSeverity(e.value)
+                            setAssignedSeverity(e.value);
                           }
                         }}
                       />
@@ -284,126 +314,58 @@ const TicketView = ({ ticket }: { ticket: Ticket | undefined }) => {
         <></>
       )}
 
-<div className="flex flex-wrap">
+      <div className="flex flex-wrap">
         {/* STARTS HERE */}
         <div className="p-10 md:w-2/3 md:mb-0 mb-6 flex flex-col w-full">
-        <div className="min-h-full flex items-center justify-center px-4">
-    
-    <div className="max-w-4xl bg-gray-100 w-full rounded-lg shadow-xl">
-        <div className="p-4 border-b">
-            <h2 className="text-2xl ">
-              {finalTicket?.title}
-            </h2>
-            <p className="text-sm text-gray-500">
-                Listed details for the following ticket. 
-            </p>
-        </div>
-        <div>
-            <div className="md:grid md:grid-cols-2 md:space-y-0 space-y-1 p-4 border-b">
-                <p className="text-gray-600">
-                  Ticket Id:
-                </p>
-                <p>
-                    {finalTicket?.id}
-                </p>
-            </div>
-            <div className="md:grid md:grid-cols-2 md:space-y-0 space-y-1 p-4 border-b">
-                <p className="text-gray-600">
-                  Ticket type:
-                </p>
-                <p>
-                    {finalTicket?.type}
-                </p>
-            </div>
-            <div className="md:grid md:grid-cols-2 md:space-y-0 space-y-1 p-4 border-b">
-                <p className="text-gray-600">
-                  Ticket Status
-                </p>
-                <p>
-                    {getStatus(String(finalTicket?.status))}
-                </p>
-            </div>
-            <div className="md:grid md:grid-cols-2 md:space-y-0 space-y-1 p-4 border-b">
-                <p className="text-gray-600">
-                    Assignee
-                </p>
-                <p>
-                  {getAssignedUser(String(finalTicket?.user), users).name}
-                </p>
-            </div>
-            <div className="md:grid md:grid-cols-2 md:space-y-0 space-y-1 p-4 border-b">
-                <p className="text-gray-600">
-                Priority:
-                </p>
-                <p>
-                    {finalTicket?.severity}
-                </p>
-            </div>
-            <div className="md:grid md:grid-cols-2 md:space-y-0 space-y-1 p-4 border-b">
-                <p className="text-gray-600">
-                    Project
-                </p>
-                <p>
-                  {getAssignedProject(String(finalTicket?.project), projects).name}
-                </p>
-            </div>
-            <div className="md:grid md:grid-cols-2 md:space-y-0 space-y-1 p-4 border-b">
-                <p className="text-gray-600">
-                    Description
-                </p>
-                <p>
-                    {finalTicket?.description}
-                </p>
-            </div>
-
-        </div>
-    </div>
-</div>
-            {/* <div className="rounded bg-gray-100 p-4 min-h-full max-h-screen overflow-auto">
-              <div className="flex-grow text-gray-800">
-                <h2 className=" text-3xl title-font font-medium mb-3">
+          <div className="min-h-full flex items-center justify-center px-4">
+            <div className="max-w-4xl bg-gray-100 w-full rounded-lg shadow-xl">
+              <div className="p-4 border-b">
+                <h2 className="text-2xl font-semibold text-gray-700">
                   {finalTicket?.title}
                 </h2>
-                <ul>
-                  <li className="leading-relaxed text-xl font-semibold text-justify">
-                    Ticket Id:
-                  </li>
-                  <li className="leading-relaxed text-lg text-justify">
-                    {finalTicket?.id}
-                  </li>
-                  <li className="leading-relaxed text-xl font-semibold text-justify">
-                    Priority:
-                  </li>
-                  <li className="leading-relaxed text-lg text-justify">
-                    {finalTicket?.severity}
-                  </li>
-                  <li className="leading-relaxed text-xl font-semibold text-justify">
-                    Type
-                  </li>
-                  <li className="leading-relaxed text-lg text-justify">
-                    {finalTicket?.type}
-                  </li>
-                  <li className="leading-relaxed text-xl font-semibold text-justify">
-                    Assignee
-                  </li>
-                  <li className="leading-relaxed text-lg text-justify">
-                    {getAssignedUser(String(finalTicket?.user), users).name}
-                  </li>
-                  <li className="leading-relaxed text-xl font-semibold text-justify">
-                    Project
-                  </li>
-                  <li className="leading-relaxed text-lg text-justify">
-                    {getAssignedProject(String(finalTicket?.project), projects).name}
-                  </li>
-                  <li className="leading-relaxed text-xl font-semibold text-justify">
-                    Description:
-                  </li>
-                  <li className="leading-relaxed text-lg text-justify">
-                    {finalTicket?.description}
-                  </li>
-                </ul>
+                <p className="text-sm text-gray-500">
+                  Listed details for the following ticket.
+                </p>
               </div>
-            </div> */}
+              <div>
+                <div className="md:grid md:grid-cols-2 md:space-y-0 space-y-1 p-4 border-b">
+                  <p className="text-gray-600">Ticket Id:</p>
+                  <p>{finalTicket?.id}</p>
+                </div>
+                <div className="md:grid md:grid-cols-2 md:space-y-0 space-y-1 p-4 border-b">
+                  <p className="text-gray-600">Ticket type:</p>
+                  <p>{finalTicket?.type}</p>
+                </div>
+                <div className="md:grid md:grid-cols-2 md:space-y-0 space-y-1 p-4 border-b">
+                  <p className="text-gray-600">Ticket Status</p>
+                  <p>{getStatus(String(finalTicket?.status))}</p>
+                </div>
+                <div className="md:grid md:grid-cols-2 md:space-y-0 space-y-1 p-4 border-b">
+                  <p className="text-gray-600">Assignee</p>
+                  <p>
+                    {getAssignedUser(String(finalTicket?.user), users).name}
+                  </p>
+                </div>
+                <div className="md:grid md:grid-cols-2 md:space-y-0 space-y-1 p-4 border-b">
+                  <p className="text-gray-600">Priority:</p>
+                  <p>{finalTicket?.severity}</p>
+                </div>
+                <div className="md:grid md:grid-cols-2 md:space-y-0 space-y-1 p-4 border-b">
+                  <p className="text-gray-600">Project</p>
+                  <p>
+                    {
+                      getAssignedProject(String(finalTicket?.project), projects)
+                        .name
+                    }
+                  </p>
+                </div>
+                <div className="md:grid md:grid-cols-2 md:space-y-0 space-y-1 p-4 border-b">
+                  <p className="text-gray-600">Description</p>
+                  <p>{finalTicket?.description}</p>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
 
         <div className="p-10 md:w-1/3 md:mb-0 mb-6 flex flex-col w-full">
