@@ -15,7 +15,7 @@ Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 Home Page. Users can select a ticket or project which will redirect them to the corresponding page.
 ![bug_home](https://user-images.githubusercontent.com/60020795/118207620-6c6bb400-b43b-11eb-8afc-814bd8d91206.png)
 
-Ticket Page. Users can search for a specific ticket, and click a row to see detailed information.
+Ticket Page. Users can create a ticket, search for a specific ticket, and click a row to see detailed information.
 ![ticket_home](https://user-images.githubusercontent.com/60020795/118208315-e81a3080-b43c-11eb-86ab-ad6d4a1fb7ce.png)
 
 Ticket Detail Page. Users can view the ticket details, edit existing info, and add comments.
@@ -23,7 +23,7 @@ Ticket Detail Page. Users can view the ticket details, edit existing info, and a
 ![ticket_detail_form](https://user-images.githubusercontent.com/60020795/118208159-a38e9500-b43c-11eb-84dc-0f142bfc32bc.png)
 ![ticket_detail_delete](https://user-images.githubusercontent.com/60020795/118208226-c0c36380-b43c-11eb-85d4-32b450c3972a.png)
 
-Project Page. Users can search for a specific project, and click a row to see detailed information.
+Project Page. Users can create a new project, search for a specific project, and click a row to see detailed information.
 ![project_home](https://user-images.githubusercontent.com/60020795/118208593-6b3b8680-b43d-11eb-8bb6-bae2d49bb20c.png)
 
 Project Detail Page. Users can view project details, list of tickets, edit the project details, and change team members.
