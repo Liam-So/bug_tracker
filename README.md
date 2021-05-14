@@ -6,6 +6,8 @@
 
 * Includes features such as user authentication, dynamic routing, and real time data for changes made by a client. Users have the ablity to create new projects, assign new tickets for features or bugs, and comment on other tickets.
 
+* In order to run this app locally, you must generate your own Firebase config keys and replace them in frontend/src/config/config.ts and backend/index.js.
+
 ### `npm start`
 
 Runs the app locally.\
